@@ -2,10 +2,28 @@
 
 ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember)
 
+![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases)
+
 Rember is a command line tool that allows you to easily run builds and tests automatically before
 committing/pushing code and waiting for it to break the pipeline 15 minutes later.
 
-Usage:
+## Installation
+
+- With [choco](https://community.chocolatey.org/packages/Rember)
+  ```sh
+  choco install rember --pre 
+  ```
+
+- With [Nuget](https://www.nuget.org/packages/Rember/)
+  ```sh
+  dotnet tool install --global Rember --version 0.0.1-beta
+  ```
+
+Check the latest version just in case.
+
+
+## Usage
+
 - rember init: Initializes a pre commit and push hook that builds and tests (more flexibility will be added later)
 - rember forgor: Removes said hooks.
 
