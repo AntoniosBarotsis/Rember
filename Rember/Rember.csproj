@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.0.1</Version>
+        <Version>0.0.1.1-beta</Version>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -10,6 +10,12 @@
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>rember</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/AntoniosBarotsis/Rember</RepositoryUrl>
+        <PackageTags>git hook;pre commit</PackageTags>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
 </Project>

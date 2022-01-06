@@ -1,5 +1,7 @@
 # Rember
 
+![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember)
+
 Rember is a command line tool that allows you to easily run builds and tests automatically before
 committing/pushing code and waiting for it to break the pipeline 15 minutes later.
 
