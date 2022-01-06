@@ -1,8 +1,6 @@
 # Rember
 
-![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember)
-
-![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases)
+![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember) ![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases)
 
 Rember is a command line tool that allows you to easily run builds and tests automatically before
 committing/pushing code and waiting for it to break the pipeline 15 minutes later.
@@ -20,6 +18,10 @@ committing/pushing code and waiting for it to break the pipeline 15 minutes late
   ```
 
 Check the latest version just in case.
+
+It is worth noting that the choco package is currently about 1000 times larger than the nuget one
+because it needed things budled with it to run so it goes without saying, if you can use the
+latter, do it. If you can't then don't worry too much about it cause it's still only 10 or so mb.
 
 
 ## Usage
