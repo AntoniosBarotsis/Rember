@@ -7,6 +7,14 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <PublishTrimmed>true</PublishTrimmed>
+        <PublishSingleFile>true</PublishSingleFile>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <SelfContained>true</SelfContained>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <Configuration>release</Configuration>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>rember</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
