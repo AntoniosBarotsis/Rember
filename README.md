@@ -40,3 +40,6 @@ This is VERY early in development. I'll be adding a few more features and a lot 
 to this. Eventually I'll try setting up a CD pipeline to push this to things like Chocolatey and or Homebrew.
 
 To install this right now, assuming you have the required dotnet stuff, simply run the `RefreshPackage` ps script.
+
+To generate executables for both windows and linux run `CreateExecutables.ps1` (or just the
+linux half if you can't run powershell).
