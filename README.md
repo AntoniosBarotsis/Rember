@@ -24,7 +24,10 @@ your used language and build tool automatically, currently (hopefully) supports:
   dotnet tool install --global Rember --version 0.0.1-beta
   ```
 
-Check the latest version just in case.
+Check the latest version just in case. A note for the versions, you may have noticed that I used
+4 version digits, that is because I am dumb and couldn't push them first try to their respective
+platforms. The first 3 numbers are the actual version (0.0.1.1 is the same code as 0.0.1.3). This
+will eventually go away as I now *believe* I figured out deployment and we move to newer versions.
 
 It is worth noting that the choco package is currently about 1000 times larger than the nuget one
 because it needed things budled with it to run so it goes without saying, if you can use the
