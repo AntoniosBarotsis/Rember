@@ -17,6 +17,7 @@ var res = args[0].Trim() switch
 {
     "init" => Init(args.Skip(1).ToList()),
     "forgor" => Clear(),
+    "logs" => ToggleOutput(args.Skip(1).ToList()),
     "-h" or "--help" => Description(),
     _ => InvalidArgument(args[0])
 };
@@ -53,11 +54,27 @@ string Init(List<string> args)
     return "Rember initialized";
 }
 
+string ToggleOutput(List<string> args)
+{
+    var editor = new ActionEditor(Type.Commit);
+
+    var res = args[0].Trim() switch
+    {
+        "enable" => editor.StageEdit(EditType.OutputEnable),
+        "disable" => editor.StageEdit(EditType.OutputDisable),
+        _ => "Invalid switch, can be either \"logs enable\" or \"logs disable\"."
+    };
+
+    editor.ApplyEdits();
+
+    return res;
+}
+
 string Clear()
 {
     var preCommit = Directory.GetCurrentDirectory() + "/.git/hooks/pre-commit";
     var prePush = Directory.GetCurrentDirectory() + "/.git/hooks/pre-push";
-    
+
     File.Delete(preCommit);
     File.Delete(prePush);
 
@@ -76,7 +93,9 @@ committing code and waiting for it to break the pipeline 15 minutes later.
 
 Usage:
   - rember init: Initializes a pre commit and push hook that builds and tests (more flexibility will be added later)
-  - rember forgor: Removes said hooks.";
+  - rember forgor: Removes said hooks.
+  - rember logs enable: Enables the output of your builds and tests
+  - rember logs disable: Disables the output of your builds and tests";
 }
 
 string InvalidArgument(string arg)
