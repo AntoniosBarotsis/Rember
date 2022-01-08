@@ -25,7 +25,7 @@ public class Language
 
     public static Language[] SupportedLanguages { get; } =
     {
-        Java, Csharp, Javascript
+        Java, Csharp, Javascript, Scala
     };
 
     private static Language Java => new(
@@ -47,5 +47,12 @@ public class Language
         new[] { "js", "ts" },
         new[] { "package.json" },
         new[] { BuildTool.Npm, BuildTool.Yarn }
+    );
+
+    private static Language Scala => new(
+        "Scala",
+        new[] { "scala" },
+        Array.Empty<string>(),
+        new[] { BuildTool.Sbt }
     );
 }

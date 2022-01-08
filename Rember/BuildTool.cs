@@ -52,4 +52,11 @@ public class BuildTool
         "yarn build",
         "yarn test"
     );
+
+    public static BuildTool Sbt => new(
+        "SBT",
+        new [] { "build.sbt" },
+        "sbt compile --java-home \"$JAVA_HOME\"", // had a weird bug where if I didn't add this flag
+        "sbt test --java-home \"$JAVA_HOME\""      // it would use the wrong version, might be only me idk
+    );
 }
