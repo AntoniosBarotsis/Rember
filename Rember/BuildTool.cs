@@ -18,6 +18,8 @@ public class BuildTool
     public string Build { get; }
     public string Test { get; }
 
+    public static BuildTool[] SupportedBuildTools => new[] { Gradle, Maven, Dotnet, Npm, Yarn, Sbt };
+
     public static BuildTool Gradle => new(
         "Gradle",
         new[] { "gradle.settings", "build.gradle" },
@@ -55,8 +57,8 @@ public class BuildTool
 
     public static BuildTool Sbt => new(
         "SBT",
-        new [] { "build.sbt" },
+        new[] { "build.sbt" },
         "sbt compile --java-home \"$JAVA_HOME\"", // had a weird bug where if I didn't add this flag
-        "sbt test --java-home \"$JAVA_HOME\""      // it would use the wrong version, might be only me idk
+        "sbt test --java-home \"$JAVA_HOME\"" // it would use the wrong version, might be only me idk
     );
 }
