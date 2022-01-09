@@ -1,4 +1,6 @@
-﻿namespace Rember;
+﻿using Rember.Tasks;
+
+namespace Rember;
 
 public static class BuildToolDetector
 {

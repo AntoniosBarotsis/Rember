@@ -1,6 +1,6 @@
-﻿namespace Rember;
+﻿namespace Rember.Tasks;
 
-public class BuildTool
+public class BuildTool: ITask
 {
     // TODO Investigate if npm vs yarn are distinguishable or if reading package.json is needed
     // TODO if so add some additional thing that reads into the file and determines that.   
@@ -61,4 +61,25 @@ public class BuildTool
         "sbt compile --java-home \"$JAVA_HOME\"", // had a weird bug where if I didn't add this flag
         "sbt test --java-home \"$JAVA_HOME\"" // it would use the wrong version, might be only me idk
     );
+
+    public string GetToolName(Events? events = null)
+    {
+        if (events is null) throw new ArgumentNullException(nameof(events));
+
+        return Name;
+    }
+
+    public string GetCommand(Events? events = null)
+    {
+        if (events is null) throw new ArgumentNullException(nameof(events));
+
+        return events == Events.Build ? Build : Test;
+    }
+
+    public string GetCommandDescription(Events? events = null)
+    {
+        if (events is null) throw new ArgumentNullException(nameof(events));
+        
+        return events == Events.Build ? "Build" : "Test";
+    }
 }

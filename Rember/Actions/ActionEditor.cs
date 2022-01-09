@@ -1,6 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using Rember.FileStuff;
+using Rember.Tasks;
 
-namespace Rember;
+namespace Rember.Actions;
 
 public class ActionEditor
 {
@@ -10,24 +11,21 @@ public class ActionEditor
 
         // TODO This is ugly and repetitive, move to a separate clas FileAccessor or something
         var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-        using var sr = new StreamReader(File.OpenRead(path));
-        Text = sr.ReadToEnd();
+        HookAccessor = new HookAccessor(path);
 
-        Metadata = Text
-            .Split("\n")
-            .Where(line => MetadataRegex.IsMatch(line))
-            .Select(line => line.Split(":")[1].Trim())
-            .ToArray();
+        Text = HookAccessor.Text;
+        Metadata = HookAccessor.Metadata;
 
-        BuildTool = BuildTool.SupportedBuildTools
-            .First(bt => bt.Name == Metadata[0]);
+        BuildTool = Metadata.GetBuildTool() ?? 
+                    throw new Exception("Something went wrong with the build tool retrieval");
+
     }
 
     private BuildTool BuildTool { get; }
     private Type Type { get; }
     private string Text { get; set; }
-    private string[] Metadata { get; }
-    private static Regex MetadataRegex { get; } = new("#[a-z]+:[A-Za-z]+");
+    private Metadata Metadata { get; }
+    private HookAccessor HookAccessor { get; set; }
 
     public string StageEdit(EditType editType)
     {
@@ -42,9 +40,7 @@ public class ActionEditor
 
     public void ApplyEdits()
     {
-        var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-        using var sw = new StreamWriter(File.Create(path));
-        sw.Write(Text);
+        HookAccessor.SaveChanges();
     }
 
     private string ToggleOutput(EditType editType)

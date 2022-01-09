@@ -1,5 +1,8 @@
-﻿namespace Rember;
+﻿namespace Rember.FileStuff;
 
+/// <summary>
+/// Traverses through the project files.
+/// </summary>
 public class FileLoader
 {
     private static FileLoader? _instance;
@@ -14,6 +17,8 @@ public class FileLoader
         get { return _instance ??= new FileLoader(); }
     }
 
+    private List<string>? Files { get; set; }
+
     /// <summary>
     ///     Recursively finds all files from the given path. The folder names found in
     ///     Language.Ignored are ignored.
@@ -22,7 +27,8 @@ public class FileLoader
     /// <returns>A list of files.</returns>
     public Lazy<List<string>> DirectorySearch(string path)
     {
-        return new Lazy<List<string>>(DirectorySearch(path, new List<string>()));
+        Files ??= new List<string>(DirectorySearch(path, new List<string>()));
+        return new Lazy<List<string>>(Files);
     }
 
     private static List<string> DirectorySearch(string path, List<string> files)

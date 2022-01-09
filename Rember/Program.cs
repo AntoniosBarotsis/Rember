@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using Rember;
+using Rember.Actions;
+using Rember.FileStuff;
 using Type = Rember.Type;
 
 if (args.Length == 0)
