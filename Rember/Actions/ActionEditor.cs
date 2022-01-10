@@ -45,11 +45,19 @@ public class ActionEditor
 
     private string ToggleOutput(EditType editType)
     {
-        Text = string.Join("\r\n", Text.Split("\r\n")
+        var toggle = false;
+        HookAccessor.Text = string.Join("\r\n", Text.Split("\r\n")
             .Select(line =>
             {
-                if (!(line.Contains(BuildTool.Build) || line.Contains(BuildTool.Test))) return line;
+                // Next line has the command
+                if (line.Contains("echo \"Running"))
+                {
+                    toggle = true;
+                    return line;
+                }
 
+                if (!toggle) return line;
+                toggle = false;
                 if (editType == EditType.OutputEnable) return line.Replace(" &> /dev/null", "");
 
                 // This makes sure the out dump isn't added multiple times.

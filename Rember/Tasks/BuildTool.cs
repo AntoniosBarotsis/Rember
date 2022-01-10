@@ -1,11 +1,13 @@
-﻿namespace Rember.Tasks;
+﻿using Rember.Actions;
 
-public class BuildTool: ITask
+namespace Rember.Tasks;
+
+public class BuildTool
 {
     // TODO Investigate if npm vs yarn are distinguishable or if reading package.json is needed
     // TODO if so add some additional thing that reads into the file and determines that.   
 
-    private BuildTool(string name, string[] associatedFiles, string build, string test)
+    private BuildTool(string name, string[] associatedFiles, TemplateTask build, TemplateTask test)
     {
         Name = name;
         AssociatedFiles = associatedFiles;
@@ -15,71 +17,52 @@ public class BuildTool: ITask
 
     public string Name { get; }
     public string[] AssociatedFiles { get; }
-    public string Build { get; }
-    public string Test { get; }
+    public TemplateTask Build { get; }
+    public TemplateTask Test { get; }
 
     public static BuildTool[] SupportedBuildTools => new[] { Gradle, Maven, Dotnet, Npm, Yarn, Sbt };
 
     public static BuildTool Gradle => new(
         "Gradle",
-        new[] { "gradle.settings", "build.gradle" },
-        "gradle build",
-        "gradle test"
+        new[] { "gradle.settings", "build.gradle" }, 
+        new TemplateTask("Build", "gradle build"), 
+        new TemplateTask("Test", "gradle test")
     );
 
     public static BuildTool Maven => new(
         "Maven",
         new[] { "pom.xml" },
-        "mvn build",
-        "mvn test"
+        new TemplateTask("Build", "mvn build"), 
+        new TemplateTask("Test", "mvn test")
     );
 
     public static BuildTool Dotnet => new(
         "Dotnet",
         Array.Empty<string>(),
-        "dotnet build",
-        "dotnet test"
+        new TemplateTask("Build", "dotnet build"), 
+        new TemplateTask("Test", "dotnet test")
     );
 
     public static BuildTool Npm => new(
         "NPM",
         new[] { "package-lock.json" },
-        "npm build",
-        "npm test"
+        new TemplateTask("Build", "npm build"), 
+        new TemplateTask("Test", "npm test")
     );
 
     public static BuildTool Yarn => new(
         "Yarn",
         new[] { "yarn.lock" },
-        "yarn build",
-        "yarn test"
+        new TemplateTask("Build", "yarn build"), 
+        new TemplateTask("Test", "yarn test")
     );
 
+    // had a weird bug where if I didn't add this flag
+    // it would use the wrong version, might be only me idk
     public static BuildTool Sbt => new(
         "SBT",
         new[] { "build.sbt" },
-        "sbt compile --java-home \"$JAVA_HOME\"", // had a weird bug where if I didn't add this flag
-        "sbt test --java-home \"$JAVA_HOME\"" // it would use the wrong version, might be only me idk
+        new TemplateTask("Build", "sbt compile --java-home \"$JAVA_HOME\""), 
+        new TemplateTask("Test", "sbt test --java-home \"$JAVA_HOME\"")
     );
-
-    public string GetToolName(Events? events = null)
-    {
-        if (events is null) throw new ArgumentNullException(nameof(events));
-
-        return Name;
-    }
-
-    public string GetCommand(Events? events = null)
-    {
-        if (events is null) throw new ArgumentNullException(nameof(events));
-
-        return events == Events.Build ? Build : Test;
-    }
-
-    public string GetCommandDescription(Events? events = null)
-    {
-        if (events is null) throw new ArgumentNullException(nameof(events));
-        
-        return events == Events.Build ? "Build" : "Test";
-    }
 }
