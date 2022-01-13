@@ -22,6 +22,7 @@ var res = args[0].Trim() switch
     "forgor" => Clear(),
     "logs" => ToggleOutput(args.Skip(1).ToList()),
     "create" => CreateCommand(args.Skip(1).ToList()),
+    "remove" => RemoveCommand(args.Skip(1).First()),
     "-h" or "--help" => Description(),
     _ => InvalidArgument(args[0])
 };
@@ -69,7 +70,7 @@ string ToggleOutput(List<string> args)
 {
     var editor = new ActionEditor(Type.Commit);
 
-    var res = args[0].Trim() switch
+    var result = args[0].Trim() switch
     {
         "enable" => editor.StageEdit(EditType.OutputEnable),
         "disable" => editor.StageEdit(EditType.OutputDisable),
@@ -78,7 +79,7 @@ string ToggleOutput(List<string> args)
 
     editor.ApplyEdits();
 
-    return res;
+    return result;
 }
 
 string CreateCommand(List<string> args)
@@ -100,6 +101,14 @@ string CreateCommand(List<string> args)
     
     
     return "Command Created!";
+}
+
+string RemoveCommand(string commandName)
+{
+    var editor = new ActionEditor(Type.Commit);
+    var result = editor.StageEdit(EditType.TaskEnable, commandName);
+    editor.ApplyEdits();
+    return result;
 }
 
 string Clear()

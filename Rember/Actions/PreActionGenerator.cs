@@ -52,7 +52,6 @@ public class PreActionGenerator
 exec < /dev/tty
 
 echo """"
-
 echo ""Do you want to run {name}? [Y/n]""
 read {inputName}
 

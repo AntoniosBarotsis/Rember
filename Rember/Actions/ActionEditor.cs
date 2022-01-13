@@ -1,4 +1,6 @@
-﻿using Rember.FileStuff;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+using Rember.FileStuff;
 using Rember.Tasks;
 
 namespace Rember.Actions;
@@ -16,22 +18,22 @@ public class ActionEditor
         Text = HookAccessor.Text;
         Metadata = HookAccessor.Metadata;
 
-        BuildTool = Metadata.GetBuildTool() ?? 
+        BuildTool = Metadata.GetBuildTool() ??
                     throw new Exception("Something went wrong with the build tool retrieval");
-
     }
 
     private BuildTool BuildTool { get; }
     private Type Type { get; }
-    private string Text { get; set; }
+    private string Text { get; }
     private Metadata Metadata { get; }
-    private HookAccessor HookAccessor { get; set; }
+    private HookAccessor HookAccessor { get; }
 
-    public string StageEdit(EditType editType)
+    public string StageEdit(EditType editType, string taskName = "")
     {
         var res = editType switch
         {
             EditType.OutputEnable or EditType.OutputDisable => ToggleOutput(editType),
+            EditType.TaskEnable => TaskEnable(taskName),
             _ => ""
         };
 
@@ -66,10 +68,44 @@ public class ActionEditor
 
         return editType == EditType.OutputEnable ? "Output enabled." : "Output disabled";
     }
+
+    private string TaskEnable(string taskName)
+    {
+        var textInfo = new CultureInfo("en-US", false).TextInfo;
+
+        // Searches for the variable name to determine whether the task exists.
+        if (!Text.Contains($"{taskName}Input", StringComparison.CurrentCultureIgnoreCase))
+            return $"Task \"{taskName}\" not found.";
+
+        // Extract index
+        var tmp = new Regex($"echo \"Do you want to run {taskName}?", RegexOptions.IgnoreCase);
+        var startIndex = tmp.Match(Text).Index;
+
+        // Checks to see if this has already been commented out
+        if (Text.Substring(startIndex - 2, 2) == "# ") return "Task already disabled";
+
+        // Gets the rest of the text
+        var rest = Text[startIndex..];
+        var endIndex = rest.IndexOf("\n\r", StringComparison.Ordinal);
+        var usefulPart = Text.Substring(startIndex, endIndex);
+
+        // Comments out the 2 lines and sets the variable that was previously read to "n"
+        var usefulPartUpdated = string.Join("\n", usefulPart
+            .Split("\n")
+            .ToList()
+            .Select(el => $"# {el}")
+            .Append($"{textInfo.ToTitleCase(taskName)}Input=\"n\""));
+
+        HookAccessor.Text = Text.Replace(usefulPart, usefulPartUpdated);
+
+        return $"Task \"{taskName}\" removed!";
+    }
 }
 
 public enum EditType
 {
     OutputEnable,
-    OutputDisable
+    OutputDisable,
+    TaskDisable,
+    TaskEnable
 }
