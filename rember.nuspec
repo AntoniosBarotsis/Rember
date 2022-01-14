@@ -3,12 +3,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>rember</id>
-    <version>0.0.1.3-beta</version>
+    <version>0.0.2-beta1</version>
     <packageSourceUrl>https://github.com/AntoniosBarotsis/Rember</packageSourceUrl>
     <owners>Antonios Barotsis</owners>
     <title>rember</title>
     <authors>Antonios Barotsis</authors>
     <projectUrl>https://github.com/AntoniosBarotsis/Rember</projectUrl>
+    <licenseUrl>https://github.com/AntoniosBarotsis/Rember/blob/master/LICENSE</licenseUrl>
+    <bugTrackerUrl>https://github.com/AntoniosBarotsis/Rember/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc</bugTrackerUrl>
     <tags>rember git hook pre commit</tags>
     <summary>CLI tool for configuring builds and tests as git hooks.</summary>
     <description>
@@ -17,8 +19,15 @@
       Rember is a command line tool that allows you to easily run builds and tests automatically before
       committing or pushing your code.
     </description>
+    <releaseNotes>
+      - Remove existing tasks
+      - Select if you only want build/test at init
+      - Enable/disable task output
+      - Enable/disable task
+    </releaseNotes>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
+    <file src="README.md" target="tools" />
   </files>
 </package>

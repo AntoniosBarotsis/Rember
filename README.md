@@ -29,12 +29,12 @@ custom tasks planned for version 0.0.3.
 
 - With [choco](https://community.chocolatey.org/packages/Rember)
   ```sh
-  choco install rember --pre 
+  choco install rember --version=0.0.2-beta1 --pre 
   ```
 
 - With [Nuget](https://www.nuget.org/packages/Rember/)
   ```sh
-  dotnet tool install --global Rember --version 0.0.1-beta
+  dotnet tool install --global Rember --version 0.0.2-beta1
   ```
 
 Check the latest version just in case. A note for the versions, you may have noticed that I used
@@ -65,8 +65,10 @@ linux half if you can't run powershell).
 - v0.0.2-beta
   - Remove existing tasks
   - Select if u want build/test at init, ability to add either one later on
-  - Ability to define custom tasks to run
+  - Ability to define custom tasks to run [a bit buggy, pushed back to  0.0.3]
 - v0.0.3-beta
+  - Completely remake how file accesses work
+  - Fix custom task creation
   - Add save and restore
   - Ability to load settings from a yml file
 

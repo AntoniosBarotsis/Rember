@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.0.2</Version>
+        <Version>0.0.2-beta1</Version>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <!-- Switch the following 3 to false to use dotnet pack -->
+        <!-- Switch the following 3 to true to use dotnet pack -->
         <PublishTrimmed>false</PublishTrimmed>
         <PublishSingleFile>false</PublishSingleFile>
         <SelfContained>false</SelfContained>
