@@ -59,10 +59,29 @@ string Init(List<string> args)
 
     Console.WriteLine($"Recognized build tool: {buildTool.Name}");
 
-    new PreActionGenerator(buildTool, Type.Commit)
-        .AddBuildScript()
-        .AddTestScript()
-        .WriteToFile();
+    var generator = 
+        new PreActionGenerator(buildTool, Type.Commit)
+            .AddBuildScript()
+            .AddTestScript();
+
+    if (args.Count == 0 || args[0] == "")
+    {
+        generator.WriteToFile();
+
+        return "Rember initialized";
+    } 
+    
+    switch (args[0])
+    {
+        case "build" or "-b":
+            DisableCommand("test", generator.Text);
+            break;
+        case "test" or "-t":
+            DisableCommand("build", generator.Text);
+            break;
+        default:
+            return $"Invalid option {args[0]}";
+    }
 
     return "Rember initialized";
 }
@@ -112,9 +131,12 @@ string EnableCommand(string commandName)
     return result;
 }
 
-string DisableCommand(string commandName)
+string DisableCommand(string commandName, string text = "")
 {
-    var editor = new ActionEditor(Type.Commit);
+    var editor = text == "" ? 
+        new ActionEditor(Type.Commit) :
+        new ActionEditor(Type.Commit, text);
+    
     var result = editor.StageEdit(EditType.TaskDisable, commandName);
     editor.ApplyEdits();
     return result;
@@ -142,11 +164,12 @@ Rember is a command line tool that allows you to easily run builds and tests aut
 committing code and waiting for it to break the pipeline 15 minutes later.
 
 Usage:
-  - rember init: Initializes a pre commit and push hook that builds and tests (more flexibility will be added later)
+  - rember init [-b | -t]: Initializes a pre commit and push hook that builds and tests. The `b` and `t` flags specify 
+    will only create the build or test task respectively. Either can be added with `enable` later.
   - rember forgor: Removes said hooks.
   - rember logs enable: Enables the output of your builds and tests
   - rember logs disable: Disables the output of your builds and tests
-  - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash)
+  - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash) [BUGGY]
   - rember enable TaskName: Enables the given task
   - rember disable TaskName: Disables the given task";
 }

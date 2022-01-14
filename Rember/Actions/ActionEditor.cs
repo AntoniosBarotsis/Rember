@@ -22,6 +22,23 @@ public class ActionEditor
                     throw new Exception("Something went wrong with the build tool retrieval");
     }
 
+    public ActionEditor(Type type, string text)
+    {
+        Type = type;
+        
+        // TODO This is ugly and repetitive, move to a separate clas FileAccessor or something
+        var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
+        HookAccessor = new HookAccessor(path);
+
+        Text = text;
+        HookAccessor.Text = Text;
+        
+        Metadata = HookAccessor.Metadata;
+
+        BuildTool = Metadata.GetBuildTool() ??
+                    throw new Exception("Something went wrong with the build tool retrieval");
+    }
+
     private BuildTool BuildTool { get; }
     private Type Type { get; }
     private string Text { get; }

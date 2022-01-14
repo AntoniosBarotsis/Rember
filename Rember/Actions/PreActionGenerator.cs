@@ -12,7 +12,7 @@ public class PreActionGenerator
         BuildTool = buildTool;
     }
 
-    private string Text { get; set; }
+    public string Text { get; private set; }
     private HookAccessor? HookAccessor { get; set; }
     private Type Type { get; }
     private BuildTool BuildTool { get; }
