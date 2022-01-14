@@ -22,7 +22,8 @@ var res = args[0].Trim() switch
     "forgor" => Clear(),
     "logs" => ToggleOutput(args.Skip(1).ToList()),
     "create" => CreateCommand(args.Skip(1).ToList()),
-    "remove" => RemoveCommand(args.Skip(1).First()),
+    "enable" => EnableCommand(args.Skip(1).First()),
+    "disable" => DisableCommand(args.Skip(1).First()),
     "-h" or "--help" => Description(),
     _ => InvalidArgument(args[0])
 };
@@ -103,10 +104,18 @@ string CreateCommand(List<string> args)
     return "Command Created!";
 }
 
-string RemoveCommand(string commandName)
+string EnableCommand(string commandName)
 {
     var editor = new ActionEditor(Type.Commit);
     var result = editor.StageEdit(EditType.TaskEnable, commandName);
+    editor.ApplyEdits();
+    return result;
+}
+
+string DisableCommand(string commandName)
+{
+    var editor = new ActionEditor(Type.Commit);
+    var result = editor.StageEdit(EditType.TaskDisable, commandName);
     editor.ApplyEdits();
     return result;
 }
@@ -137,7 +146,9 @@ Usage:
   - rember forgor: Removes said hooks.
   - rember logs enable: Enables the output of your builds and tests
   - rember logs disable: Disables the output of your builds and tests
-  - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash)";
+  - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash)
+  - rember enable TaskName: Enables the given task
+  - rember disable TaskName: Disables the given task";
 }
 
 string InvalidArgument(string arg)
