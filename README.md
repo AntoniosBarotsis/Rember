@@ -29,7 +29,7 @@ custom tasks planned for version 0.0.3.
 
 - With [choco](https://community.chocolatey.org/packages/Rember)
   ```sh
-  choco install rember --version=0.0.2-beta1 --pre 
+  choco install rember --pre
   ```
 
 - With [Nuget](https://www.nuget.org/packages/Rember/)
