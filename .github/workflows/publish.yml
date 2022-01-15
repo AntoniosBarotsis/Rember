@@ -1,0 +1,22 @@
+name: Publish
+on:
+  release:
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+      # Nuget 
+      - run: dotnet pack
+      - run: dotnet nuget push .\Rember\nupkg\*.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
+        name: Nuget publish
+      # Choco
+      - run: dotnet publish -o tools --runtime win-x64 --verbosity normal --self-contained True /property:PublishTrimmed=True /property:PublishSingleFile=True 
+      - run: choco pack
+      - run: choco push --api-key=${{ secrets.CHOCO_API_KEY }}
+        name: Choco publish
+      
