@@ -16,14 +16,15 @@ var fileLoader = FileLoader.Instance;
 var files = fileLoader.DirectorySearch(Directory.GetCurrentDirectory());
 
 // Main switch
+var remainingArgs = args.Skip(1).ToList();
 var res = args[0].Trim() switch
 {
-    "init" => Init(args.Skip(1).ToList()),
+    "init" => Init(remainingArgs),
     "forgor" => Clear(),
-    "logs" => ToggleOutput(args.Skip(1).ToList()),
-    "create" => CreateCommand(args.Skip(1).ToList()),
-    "enable" => EnableCommand(args.Skip(1).First()),
-    "disable" => DisableCommand(args.Skip(1).First()),
+    "logs" => ToggleOutput(remainingArgs),
+    "create" => CreateCommand(remainingArgs),
+    "enable" => EnableCommand(remainingArgs.First()),
+    "disable" => DisableCommand(remainingArgs.First()),
     "-h" or "--help" => Description(),
     _ => InvalidArgument(args[0])
 };
@@ -49,6 +50,7 @@ BuildTool? GetBuildTool(bool log = true)
 
 // TODO Make it so the user can pick both the lang and build tool, right now it happens automatically.
 // TODO There's like 50 things that can go wrong in this, add exception handling.
+// TODO Optimize
 string Init(List<string> args)
 {
     if (!IsGitRepository()) return "Current folder is not a git repository.";
@@ -64,10 +66,10 @@ string Init(List<string> args)
             .AddBuildScript()
             .AddTestScript();
 
+    generator.WriteToFile();
+
     if (args.Count == 0 || args[0] == "")
     {
-        generator.WriteToFile();
-
         return "Rember initialized";
     } 
     
