@@ -25,6 +25,8 @@ var res = args[0].Trim() switch
     "create" => CreateCommand(remainingArgs),
     "enable" => EnableCommand(remainingArgs.First()),
     "disable" => DisableCommand(remainingArgs.First()),
+    "save" => Save(),
+    "restore" => Restore(),
     "-h" or "--help" => Description(),
     _ => InvalidArgument(args[0])
 };
@@ -142,6 +144,44 @@ string DisableCommand(string commandName, string text = "")
     var result = editor.StageEdit(EditType.TaskDisable, commandName);
     editor.ApplyEdits();
     return result;
+}
+
+string Save()
+{
+    var path = Directory.GetCurrentDirectory() + "/.git/hooks/pre-commit";
+
+    if (!File.Exists(path))
+    {
+        return "File is missing, could not save.";
+    }
+    
+    var text = new HookAccessor(path).Text;
+    
+    using var sw = new StreamWriter(File.Create(path + ".txt"));
+    sw.Write(text);
+    sw.Close();
+    
+    return "Hooks saved!";
+}
+
+string Restore()
+{
+    var path = Directory.GetCurrentDirectory() + "/.git/hooks/pre-commit";
+    
+    if (!File.Exists(path + ".txt"))
+    {
+        return "Save-file is missing, could not restore.";
+    }
+        
+    using var sr = new StreamReader(File.OpenRead(path + ".txt"));
+    var text = sr.ReadToEnd();
+    sr.Close();
+    File.Delete(path + ".txt");
+
+    new HookAccessor(path, text)
+        .SaveChanges();
+
+    return "Hooks restored!";
 }
 
 string Clear()
