@@ -1,6 +1,6 @@
 # Rember
 
-![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember) ![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) ![GitHub commits since latest release (by date including pre-releases)](https://img.shields.io/github/commits-since/AntoniosBarotsis/rember/latest?include_prereleases) ![GitHub contributors](https://img.shields.io/github/contributors/AntoniosBarotsis/rember) ![GitHub issues](https://img.shields.io/github/issues/AntoniosBarotsis/rember)
+![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember) ![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) ![GitHub commits since latest release (by date including pre-releases)](https://img.shields.io/github/commits-since/AntoniosBarotsis/rember/latest?include_prereleases) ![GitHub contributors](https://img.shields.io/github/contributors/AntoniosBarotsis/rember) ![GitHub issues](https://img.shields.io/github/issues/AntoniosBarotsis/rember) [![Publish](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml/badge.svg)](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml)
 
 Rember is a command line tool that reminds and allows you to easily run builds, tests and custom tasks automatically before
 committing/pushing code and waiting for it to break the pipeline 15 minutes later. 
@@ -34,7 +34,7 @@ custom tasks planned for version 0.0.3.
 
 - With [Nuget](https://www.nuget.org/packages/Rember/)
   ```sh
-  dotnet tool install --global Rember --version 0.0.2-beta1
+  dotnet tool install --global Rember --version 0.0.3-beta1
   ```
 
 Check the latest version just in case. A note for the versions, the beta/rc version most likely does not make a difference;
@@ -45,7 +45,7 @@ I sometimes have some issues with Choco mostly and I need to push newer versions
 The list of commands is getting rather lengthy so run `rember -h` instead :)
 
 This is VERY early in development. I'll be adding a few more features and a lot more flexibility
-to this. Eventually I'll try setting up a CD pipeline to push this to things like Chocolatey and or Homebrew.
+to this. 
 
 To install this right now for developing, assuming you have the required dotnet stuff, simply run the `RefreshPackage` ps script.
 
