@@ -293,6 +293,8 @@ Usage:
   - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash) [BUGGY]
   - rember enable TaskName: Enables the given task
   - rember disable TaskName: Disables the given task
+  - rember save: Saves your current configuration to a separate hook file
+  - rember restore: Restores said staged configuration file
   - rember yml -g: Generates a yml file with the tasks you have already defined
   - rember yml -d: Parses the `rember.yml` file and loads the tasks that are defined there";
 }
