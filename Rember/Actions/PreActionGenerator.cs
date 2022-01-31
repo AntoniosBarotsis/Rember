@@ -7,7 +7,7 @@ public class PreActionGenerator
 {
     public PreActionGenerator(BuildTool buildTool, Type type)
     {
-        Text = "";
+        Text = LoadText();
         Type = type;
         BuildTool = buildTool;
     }
@@ -78,6 +78,17 @@ fi
         Text += res;
     }
 
+    private string LoadText()
+    {
+        var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
+        if (File.Exists(path) && Text is null or "")
+        {
+            return File.ReadAllText(path);
+        }
+
+        return "";
+    }
+
     public void WriteToFile()
     {
         var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
@@ -85,13 +96,13 @@ fi
         HookAccessor.SaveChanges();
     }
     
-    public void AppendToFile()
-    {
-        var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-        HookAccessor ??= new HookAccessor(path);
-        HookAccessor.Text += "\n" + Text;
-        HookAccessor.SaveChanges();
-    }
+    // public void AppendToFile()
+    // {
+    //     var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
+    //     HookAccessor ??= new HookAccessor(path);
+    //     HookAccessor.Text += "\n" + Text;
+    //     HookAccessor.SaveChanges();
+    // }
 }
 
 public enum Events

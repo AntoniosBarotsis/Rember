@@ -29,7 +29,7 @@ var res = args[0].Trim() switch
     "save" => Save(),
     "restore" => Restore(),
     "yml" => Yml(remainingArgs.First()),
-    "-h" or "--help" => Description(),
+    "-h" or "--help" or "help" => Description(),
     _ => InvalidArgument(args[0])
 };
 
@@ -40,8 +40,11 @@ BuildTool? GetBuildTool(bool log = true)
     var lang = LanguageDetector.DetectLanguage(files.Value);
 
     if (lang is null) return null;
-    
-    foreach (var langBuildTool in lang.BuildTools) Console.WriteLine($"- {langBuildTool.Name}");
+
+    foreach (var langBuildTool in lang.BuildTools)
+    {
+        if (log) Console.WriteLine($"- {langBuildTool.Name}");
+    }
 
     if (!log) return BuildToolDetector.DetectBuildTool(files.Value, lang);
     
@@ -123,8 +126,7 @@ string CreateCommand(List<string> args)
     
     new PreActionGenerator(buildTool, Type.Commit)
         .AddCustom(customCommand)
-        .AppendToFile();
-    
+        .WriteToFile();
     
     return "Command Created!";
 }
@@ -290,7 +292,7 @@ Usage:
   - rember forgor: Removes said hooks.
   - rember logs enable: Enables the output of your builds and tests
   - rember logs disable: Disables the output of your builds and tests
-  - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash) [BUGGY]
+  - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash)
   - rember enable TaskName: Enables the given task
   - rember disable TaskName: Disables the given task
   - rember save: Saves your current configuration to a separate hook file
