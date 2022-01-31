@@ -1,6 +1,7 @@
 name: Publish
 on:
   release:
+    types: [published]
 
 jobs:
   publish:
@@ -12,7 +13,7 @@ jobs:
           dotnet-version: '6.0.x'
       # Nuget 
       - run: dotnet pack
-      - run: dotnet nuget push .\Rember\nupkg\*.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
+      - run: dotnet nuget push .\Rember\nupkg\*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
         name: Nuget publish
       # Choco
       - run: dotnet publish -o tools --runtime win-x64 --verbosity normal --self-contained True /property:PublishTrimmed=True /property:PublishSingleFile=True 
