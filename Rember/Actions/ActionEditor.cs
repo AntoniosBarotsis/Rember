@@ -190,6 +190,7 @@ public class ActionEditor
             if (textArr[i].Contains("Input"))
             {
                 var isEnabled = true;
+                var outputEnabled = true;
                 
                 var name = textArr[i]
                     .Replace("read ", "")
@@ -201,13 +202,20 @@ public class ActionEditor
                     isEnabled = false;
                     name = name.Replace("# ", "");
                 }
+
+                var command = textArr[i + 6].Trim();
+                // If logs disabled
+                if (textArr[i + 6].Contains(" &>"))
+                {
+                    outputEnabled = false;
+                    command = command
+                        .Split(" &>")[0];
+                }
                 
-                var command = textArr[i + 6]
-                    .Split(" &>")[0]
-                    .Trim();
+                
                 i += 2;
                 
-                res.Add(new ConcreteTask(name, command, isEnabled));
+                res.Add(new ConcreteTask(name, command, isEnabled, outputEnabled));
             }
         }
 

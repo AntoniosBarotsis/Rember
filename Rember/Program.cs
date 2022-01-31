@@ -219,8 +219,6 @@ string YmlParse()
     var file = File.OpenRead(Directory.GetCurrentDirectory() + "/rember.yml");
     using var sr = new StreamReader(file);
     var text = sr.ReadToEnd();
-    sr.Close();
-    file.Close();
 
     var ymlStuff = YmlStuff.Deserialize(text);
 
@@ -234,7 +232,7 @@ string YmlParse()
     }
 
     var generator =
-        new PreActionGenerator(buildTool, Type.Commit);
+        new PreActionGenerator(buildTool, Type.Commit, false);
     
     // Add non-custom tasks
     foreach (var task in ymlStuff.Tasks)
@@ -255,9 +253,12 @@ string YmlParse()
 
     var editor = new ActionEditor(Type.Commit, generator.Text);
 
-    foreach (var task in ymlStuff.Tasks.Where(task => !task.IsEnabled))
+    foreach (var task in ymlStuff.Tasks.Where(task => !task.IsEnabled || task.OutputEnabled))
     {
-        editor.StageEdit(EditType.TaskDisable, task.Name);
+        if (!task.IsEnabled)
+            editor.StageEdit(EditType.TaskDisable, task.Name);
+        if (task.OutputEnabled)
+            editor.StageEdit(EditType.OutputEnable, task.Name);
     }
     
     editor.ApplyEdits();

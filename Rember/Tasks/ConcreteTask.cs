@@ -5,6 +5,7 @@ public class ConcreteTask: ITask
     public string Name { get; set; }
     public string Command { get; set; }
     public bool IsEnabled { get; set; } = true;
+    public bool OutputEnabled { get; set; } = false;
 
     public ConcreteTask()
     {
@@ -18,11 +19,12 @@ public class ConcreteTask: ITask
         Command = command;
     }
 
-    public ConcreteTask(string name, string command, bool isEnabled)
+    public ConcreteTask(string name, string command, bool isEnabled, bool outputEnabled)
     {
         Name = name;
         Command = command;
         IsEnabled = isEnabled;
+        OutputEnabled = outputEnabled;
     }
 
     public string GetName()

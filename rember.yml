@@ -3,6 +3,8 @@ tasks:
 - name: Build
   command: dotnet build
   isEnabled: true
+  outputEnabled: false
 - name: Test
   command: dotnet test
   isEnabled: false
+  outputEnabled: false

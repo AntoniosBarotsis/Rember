@@ -5,9 +5,11 @@ namespace Rember.Actions;
 
 public class PreActionGenerator
 {
-    public PreActionGenerator(BuildTool buildTool, Type type)
+    public PreActionGenerator(BuildTool buildTool, Type type, bool append = true)
     {
-        Text = LoadText();
+        Text = "";
+        if (append)
+            Text = LoadText();
         Type = type;
         BuildTool = buildTool;
     }
