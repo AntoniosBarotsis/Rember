@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>rember</id>
-    <version>0.0.2-beta2</version>
+    <version>0.0.3-beta1</version>
     <packageSourceUrl>https://github.com/AntoniosBarotsis/Rember</packageSourceUrl>
     <owners>Antonios Barotsis</owners>
     <title>rember</title>
@@ -20,10 +20,9 @@
       committing or pushing your code.
     </description>
     <releaseNotes>
-      - Remove existing tasks
-      - Select if you only want build/test at init
-      - Enable/disable task output
-      - Enable/disable task
+      - Fixed some bugs
+      - Add save and restore
+      - Ability to load settings from a yml file
     </releaseNotes>
   </metadata>
   <files>
