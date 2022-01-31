@@ -28,7 +28,7 @@ public class ActionEditor
         
         // TODO This is ugly and repetitive, move to a separate clas FileAccessor or something
         var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-        HookAccessor = new HookAccessor(path);
+        HookAccessor = new HookAccessor(path, text);
 
         Text = text;
         HookAccessor.Text = Text;
@@ -39,7 +39,7 @@ public class ActionEditor
                     throw new Exception("Something went wrong with the build tool retrieval");
     }
 
-    private BuildTool BuildTool { get; }
+    public BuildTool BuildTool { get; }
     private Type Type { get; }
     private string Text { get; }
     private Metadata Metadata { get; }
@@ -179,6 +179,39 @@ public class ActionEditor
     private bool TaskExists(string taskName)
     {
         return Text.Contains($"{taskName}Input", StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    public List<ConcreteTask> GetTasks()
+    {
+        var res = new List<ConcreteTask>();
+        var textArr = Text.Split("\r\n");
+        for (var i = 0; i < textArr.Length; i++)
+        {
+            if (textArr[i].Contains("Input"))
+            {
+                var isEnabled = true;
+                
+                var name = textArr[i]
+                    .Replace("read ", "")
+                    .Replace("Input", "")
+                    .Trim();
+
+                if (name.StartsWith("# "))
+                {
+                    isEnabled = false;
+                    name = name.Replace("# ", "");
+                }
+                
+                var command = textArr[i + 6]
+                    .Split(" &>")[0]
+                    .Trim();
+                i += 2;
+                
+                res.Add(new ConcreteTask(name, command, isEnabled));
+            }
+        }
+
+        return res;
     }
 }
 

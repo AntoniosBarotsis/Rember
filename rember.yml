@@ -1,0 +1,8 @@
+buildToolName: Dotnet
+tasks:
+- name: Build
+  command: dotnet build
+  isEnabled: true
+- name: Test
+  command: dotnet test
+  isEnabled: false

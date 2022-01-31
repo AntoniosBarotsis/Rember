@@ -27,7 +27,7 @@ public class HookAccessor
         Text = sr.ReadToEnd();
 
         Metadata = Metadata.Parse(Text);
-
+        sr.Close();
     }
 
     /// <summary>

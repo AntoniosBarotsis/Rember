@@ -29,7 +29,7 @@ public class PreActionGenerator
         return this;
     }
 
-    public PreActionGenerator AddCustom(CustomTask customTask)
+    public PreActionGenerator AddCustom(ConcreteTask customTask)
     {
         Generate(customTask.GetName(), customTask.GetCommand());
         return this;

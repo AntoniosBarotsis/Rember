@@ -3,6 +3,7 @@ using Rember;
 using Rember.Actions;
 using Rember.FileStuff;
 using Rember.Tasks;
+using Rember.YmlStuff;
 using Type = Rember.Actions.Type;
 
 if (args.Length == 0)
@@ -27,6 +28,7 @@ var res = args[0].Trim() switch
     "disable" => DisableCommand(remainingArgs.First()),
     "save" => Save(),
     "restore" => Restore(),
+    "yml" => Yml(remainingArgs.First()),
     "-h" or "--help" => Description(),
     _ => InvalidArgument(args[0])
 };
@@ -114,7 +116,7 @@ string CreateCommand(List<string> args)
     if (args[0].Contains(' '))
         return "Invalid input, name should be one word";
 
-    var customCommand = new CustomTask(args[0], args[1]);
+    var customCommand = new ConcreteTask(args[0], args[1]);
     var buildTool = GetBuildTool(false);
     
     if (buildTool is null) return "Build tool not recognized";
@@ -184,6 +186,83 @@ string Restore()
     return "Hooks restored!";
 }
 
+string Yml(string arg)
+{
+    return arg.ToLower() switch
+    {
+        "generate" or "gen" or "g" or "-g" => YmlGenerate(),
+        "parse" or "p" or "-p" or "-d" => YmlParse(),
+        _ => $"Invalid argument {arg}"
+    };
+}
+
+string YmlGenerate()
+{
+    var action = new ActionEditor(Type.Commit);
+    
+    var tmp = new YmlBuilder(action.BuildTool)
+        .AddTasks(action.GetTasks())
+        .Build();
+
+
+    using var sw = new StreamWriter(File.Create(Directory.GetCurrentDirectory() + "/rember.yml"));
+    sw.Write(tmp.Serialize());
+    sw.Close();
+
+    return "Generated yml file";
+}
+
+string YmlParse()
+{
+    var file = File.OpenRead(Directory.GetCurrentDirectory() + "/rember.yml");
+    using var sr = new StreamReader(file);
+    var text = sr.ReadToEnd();
+    sr.Close();
+    file.Close();
+
+    var ymlStuff = YmlStuff.Deserialize(text);
+
+    var buildTool = BuildTool
+        .SupportedBuildTools
+        .FirstOrDefault(bt => bt.Name == ymlStuff.BuildToolName);
+
+    if (buildTool is null)
+    {
+        return $"Invalid build tool {ymlStuff.BuildToolName}";
+    }
+
+    var generator =
+        new PreActionGenerator(buildTool, Type.Commit);
+    
+    // Add non-custom tasks
+    foreach (var task in ymlStuff.Tasks)
+    {
+        switch (task)
+        {
+            case { Name: "Build" }:
+                generator.AddBuildScript();
+                break;
+            case { Name: "Test" }:
+                generator.AddTestScript();
+                break;
+            default:
+                generator.AddCustom(new ConcreteTask(task.Name, task.Command));
+                break;
+        }
+    }
+
+    var editor = new ActionEditor(Type.Commit, generator.Text);
+
+    foreach (var task in ymlStuff.Tasks.Where(task => !task.IsEnabled))
+    {
+        editor.StageEdit(EditType.TaskDisable, task.Name);
+    }
+    
+    editor.ApplyEdits();
+
+    return "Loaded configuration from yml file";
+}
+
 string Clear()
 {
     var preCommit = Directory.GetCurrentDirectory() + "/.git/hooks/pre-commit";
@@ -213,7 +292,9 @@ Usage:
   - rember logs disable: Disables the output of your builds and tests
   - rember create TaskName TaskCommand: Creates a custom command (TaskName should be a valid variable name in bash) [BUGGY]
   - rember enable TaskName: Enables the given task
-  - rember disable TaskName: Disables the given task";
+  - rember disable TaskName: Disables the given task
+  - rember yml -g: Generates a yml file with the tasks you have already defined
+  - rember yml -d: Parses the `rember.yml` file and loads the tasks that are defined there";
 }
 
 string InvalidArgument(string arg)

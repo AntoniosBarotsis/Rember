@@ -7,7 +7,7 @@ public class BuildTool
     // TODO Investigate if npm vs yarn are distinguishable or if reading package.json is needed
     // TODO if so add some additional thing that reads into the file and determines that.   
 
-    private BuildTool(string name, string[] associatedFiles, TemplateTask build, TemplateTask test)
+    private BuildTool(string name, string[] associatedFiles, ConcreteTask build, ConcreteTask test)
     {
         Name = name;
         AssociatedFiles = associatedFiles;
@@ -17,44 +17,44 @@ public class BuildTool
 
     public string Name { get; }
     public string[] AssociatedFiles { get; }
-    public TemplateTask Build { get; }
-    public TemplateTask Test { get; }
+    public ConcreteTask Build { get; }
+    public ConcreteTask Test { get; }
 
     public static BuildTool[] SupportedBuildTools => new[] { Gradle, Maven, Dotnet, Npm, Yarn, Sbt };
 
     public static BuildTool Gradle => new(
         "Gradle",
         new[] { "gradle.settings", "build.gradle" }, 
-        new TemplateTask("Build", "gradle build"), 
-        new TemplateTask("Test", "gradle test")
+        new ConcreteTask("Build", "gradle build"), 
+        new ConcreteTask("Test", "gradle test")
     );
 
     public static BuildTool Maven => new(
         "Maven",
         new[] { "pom.xml" },
-        new TemplateTask("Build", "mvn build"), 
-        new TemplateTask("Test", "mvn test")
+        new ConcreteTask("Build", "mvn build"), 
+        new ConcreteTask("Test", "mvn test")
     );
 
     public static BuildTool Dotnet => new(
         "Dotnet",
         Array.Empty<string>(),
-        new TemplateTask("Build", "dotnet build"), 
-        new TemplateTask("Test", "dotnet test")
+        new ConcreteTask("Build", "dotnet build"), 
+        new ConcreteTask("Test", "dotnet test")
     );
 
     public static BuildTool Npm => new(
         "NPM",
         new[] { "package-lock.json" },
-        new TemplateTask("Build", "npm build"), 
-        new TemplateTask("Test", "npm test")
+        new ConcreteTask("Build", "npm build"), 
+        new ConcreteTask("Test", "npm test")
     );
 
     public static BuildTool Yarn => new(
         "Yarn",
         new[] { "yarn.lock" },
-        new TemplateTask("Build", "yarn build"), 
-        new TemplateTask("Test", "yarn test")
+        new ConcreteTask("Build", "yarn build"), 
+        new ConcreteTask("Test", "yarn test")
     );
 
     // had a weird bug where if I didn't add this flag
@@ -62,7 +62,7 @@ public class BuildTool
     public static BuildTool Sbt => new(
         "SBT",
         new[] { "build.sbt" },
-        new TemplateTask("Build", "sbt compile --java-home \"$JAVA_HOME\""), 
-        new TemplateTask("Test", "sbt test --java-home \"$JAVA_HOME\"")
+        new ConcreteTask("Build", "sbt compile --java-home \"$JAVA_HOME\""), 
+        new ConcreteTask("Test", "sbt test --java-home \"$JAVA_HOME\"")
     );
 }
