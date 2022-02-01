@@ -1,6 +1,6 @@
 # Rember
 
-![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember) ![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) ![GitHub commits since latest release (by date including pre-releases)](https://img.shields.io/github/commits-since/AntoniosBarotsis/rember/latest?include_prereleases) ![GitHub contributors](https://img.shields.io/github/contributors/AntoniosBarotsis/rember) ![GitHub issues](https://img.shields.io/github/issues/AntoniosBarotsis/rember) [![Publish](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml/badge.svg)](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml)
+![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember) ![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) [![Publish](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml/badge.svg)](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml)
 
 Rember is a command line tool that reminds and allows you to easily run builds, tests and custom tasks automatically before
 committing/pushing code and waiting for it to break the pipeline 15 minutes later. 
@@ -63,5 +63,8 @@ linux half if you can't run powershell).
   - Fix custom task creation
   - Add save and restore
   - Ability to load settings from a yml file
+- v0.0.4-beta
+  - Refactor file access code
+  - Add support for push hooks and the ability to choose between that and commit
 
 Will move to using a dev branch like a normal person when I leave beta versions :)
