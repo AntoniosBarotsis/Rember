@@ -1,5 +1,8 @@
 ﻿namespace Rember;
 
+/// <summary>
+///     Tries to detect the language used in the project.
+/// </summary>
 public static class LanguageDetector
 {
     /// <summary>

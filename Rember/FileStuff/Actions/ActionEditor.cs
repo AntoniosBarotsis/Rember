@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using Rember.FileStuff;
 using Rember.Tasks;
 
-namespace Rember.Actions;
+namespace Rember.FileStuff.Actions;
 
 public class ActionEditor
 {
@@ -11,9 +10,7 @@ public class ActionEditor
     {
         Type = type;
 
-        // TODO This is ugly and repetitive, move to a separate clas FileAccessor or something
-        var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-        HookAccessor = new HookAccessor(path);
+        HookAccessor = new HookAccessor(FileUtils.PreCommitHookPath);
 
         Text = HookAccessor.Text;
         Metadata = HookAccessor.Metadata;
@@ -25,14 +22,12 @@ public class ActionEditor
     public ActionEditor(Type type, string text)
     {
         Type = type;
-        
-        // TODO This is ugly and repetitive, move to a separate clas FileAccessor or something
-        var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-        HookAccessor = new HookAccessor(path, text);
+
+        HookAccessor = new HookAccessor(FileUtils.PreCommitHookPath, text);
 
         Text = text;
         HookAccessor.Text = Text;
-        
+
         Metadata = HookAccessor.Metadata;
 
         BuildTool = Metadata.GetBuildTool() ??
@@ -88,7 +83,7 @@ public class ActionEditor
     }
 
     /// <summary>
-    /// Enables the given task
+    ///     Enables the given task
     /// </summary>
     /// <param name="taskName">The task name</param>
     /// <returns>Text output</returns>
@@ -111,7 +106,7 @@ public class ActionEditor
     }
 
     /// <summary>
-    /// Disables the given task
+    ///     Disables the given task
     /// </summary>
     /// <param name="taskName">The task name</param>
     /// <returns>Text output</returns>
@@ -120,21 +115,21 @@ public class ActionEditor
         // Searches for the variable name to determine whether the task exists.
         if (!TaskExists(taskName))
             return $"Task \"{taskName}\" not found.";
-        
+
         // Extract index
         var tmp = new Regex($"echo \"Do you want to run {taskName}?", RegexOptions.IgnoreCase);
         var startIndex = tmp.Match(Text).Index;
 
         // Checks to see if this has already been commented out
         if (Text.Substring(startIndex - 2, 2) == "# ") return "Task already disabled";
-        
+
         HookAccessor.Text = ToggleTask(startIndex, taskName, false);
-        
+
         return $"Task \"{taskName}\" disabled!";
     }
 
     /// <summary>
-    /// Toggles the given task
+    ///     Toggles the given task
     /// </summary>
     /// <param name="startIndex">The Text index where the task begins</param>
     /// <param name="taskName">The task name</param>
@@ -143,7 +138,7 @@ public class ActionEditor
     private string ToggleTask(int startIndex, string taskName, bool enable)
     {
         var textInfo = new CultureInfo("en-US", false).TextInfo;
-        
+
         // Gets the rest of the text
         var rest = Text[startIndex..];
         var endIndex = rest.IndexOf("\n\r", StringComparison.Ordinal);
@@ -152,27 +147,23 @@ public class ActionEditor
         var usefulPartUpdated = "";
         // Comments out the 2 lines and sets the variable that was previously read to "n"
         if (enable)
-        {
             usefulPartUpdated = string.Join("\n", usefulPart
                 .Split("\n")
                 .ToList()
                 .Select(el => el.Replace("# ", ""))
                 .SkipLast(1));
-        }
         else
-        {
             usefulPartUpdated = string.Join("\n", usefulPart
                 .Split("\n")
                 .ToList()
                 .Select(el => $"# {el}")
                 .Append($"{textInfo.ToTitleCase(taskName)}Input=\"n\""));
-        }
 
         return Text.Replace(usefulPart, usefulPartUpdated);
     }
-    
+
     /// <summary>
-    /// Returns true if the task exists.
+    ///     Returns true if the task exists.
     /// </summary>
     /// <param name="taskName">The task name</param>
     /// <returns>True iff task exists</returns>
@@ -181,42 +172,40 @@ public class ActionEditor
         return Text.Contains($"{taskName}Input", StringComparison.CurrentCultureIgnoreCase);
     }
 
-    public List<ConcreteTask> GetTasks()
+    public IEnumerable<ConcreteTask> GetTasks()
     {
         var res = new List<ConcreteTask>();
         var textArr = Text.Split("\r\n");
         for (var i = 0; i < textArr.Length; i++)
         {
-            if (textArr[i].Contains("Input"))
+            if (!textArr[i].Contains("Input")) continue;
+
+            var isEnabled = true;
+            var outputEnabled = true;
+
+            var name = textArr[i]
+                .Replace("read ", "")
+                .Replace("Input", "")
+                .Trim();
+
+            if (name.StartsWith("# "))
             {
-                var isEnabled = true;
-                var outputEnabled = true;
-                
-                var name = textArr[i]
-                    .Replace("read ", "")
-                    .Replace("Input", "")
-                    .Trim();
-
-                if (name.StartsWith("# "))
-                {
-                    isEnabled = false;
-                    name = name.Replace("# ", "");
-                }
-
-                var command = textArr[i + 6].Trim();
-                // If logs disabled
-                if (textArr[i + 6].Contains(" &>"))
-                {
-                    outputEnabled = false;
-                    command = command
-                        .Split(" &>")[0];
-                }
-                
-                
-                i += 2;
-                
-                res.Add(new ConcreteTask(name, command, isEnabled, outputEnabled));
+                isEnabled = false;
+                name = name.Replace("# ", "");
             }
+
+            var command = textArr[i + 6].Trim();
+            // If logs disabled
+            if (textArr[i + 6].Contains(" &>"))
+            {
+                outputEnabled = false;
+                command = command
+                    .Split(" &>")[0];
+            }
+
+            i += 2;
+
+            res.Add(new ConcreteTask(name, command, isEnabled, outputEnabled));
         }
 
         return res;

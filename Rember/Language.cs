@@ -2,6 +2,10 @@
 
 namespace Rember;
 
+/// <summary>
+///     Represents any programming language. Includes data associated with it that is later used to infer the language
+///     such as file extensions, special files and a list of build tools.
+/// </summary>
 public class Language
 {
     private Language(string name, string[] extensions, string[] associatedFiles, BuildTool[] buildTools)
@@ -17,7 +21,10 @@ public class Language
     public string[] AssociatedFiles { get; }
     public BuildTool[] BuildTools { get; }
 
-    public static string[] Ignored { get; } =
+    /// <summary>
+    ///     A list of files/directories that should be ignored to save time.
+    /// </summary>
+    public static IEnumerable<string> Ignored { get; } = new[]
     {
         "idea", "vs", "vscode",
         "debug", "release", "build",
@@ -25,7 +32,10 @@ public class Language
         "node_modules"
     };
 
-    public static Language[] SupportedLanguages { get; } =
+    /// <summary>
+    ///     List of supported languages. Javascript may or may not also include Typescript, who knows.
+    /// </summary>
+    public static IEnumerable<Language> SupportedLanguages { get; } = new[]
     {
         Java, Csharp, Javascript, Scala
     };

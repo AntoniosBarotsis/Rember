@@ -1,15 +1,19 @@
-﻿using Rember.FileStuff;
-using Rember.Tasks;
+﻿using Rember.Tasks;
 
-namespace Rember.Actions;
+namespace Rember.FileStuff.Actions;
 
 public class PreActionGenerator
 {
+    /// <summary>
+    ///     Creates a new action generator.
+    /// </summary>
+    /// <param name="buildTool">The build tool</param>
+    /// <param name="type">Specifies whether this is a commit or a push action</param>
+    /// <param name="append">Specifies whether the file should be cleared or not</param>
     public PreActionGenerator(BuildTool buildTool, Type type, bool append = true)
     {
         Text = "";
-        if (append)
-            Text = LoadText();
+        if (append) Text = LoadText();
         Type = type;
         BuildTool = buildTool;
     }
@@ -19,18 +23,31 @@ public class PreActionGenerator
     private Type Type { get; }
     private BuildTool BuildTool { get; }
 
+    /// <summary>
+    ///     Adds standard build task.
+    /// </summary>
+    /// <returns></returns>
     public PreActionGenerator AddBuildScript()
     {
         Generate(BuildTool.Build.GetName(), BuildTool.Build.GetCommand());
         return this;
     }
 
+    /// <summary>
+    ///     Adds standard test task.
+    /// </summary>
+    /// <returns></returns>
     public PreActionGenerator AddTestScript()
     {
         Generate(BuildTool.Test.GetName(), BuildTool.Test.GetCommand());
         return this;
     }
 
+    /// <summary>
+    ///     Adds custom task.
+    /// </summary>
+    /// <param name="customTask">The custom task to add</param>
+    /// <returns></returns>
     public PreActionGenerator AddCustom(ConcreteTask customTask)
     {
         Generate(customTask.GetName(), customTask.GetCommand());
@@ -83,10 +100,7 @@ fi
     private string LoadText()
     {
         var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-        if (File.Exists(path) && Text is null or "")
-        {
-            return File.ReadAllText(path);
-        }
+        if (File.Exists(path) && Text is null or "") return File.ReadAllText(path);
 
         return "";
     }
@@ -97,14 +111,6 @@ fi
         HookAccessor ??= new HookAccessor(path, Text);
         HookAccessor.SaveChanges();
     }
-    
-    // public void AppendToFile()
-    // {
-    //     var path = Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}";
-    //     HookAccessor ??= new HookAccessor(path);
-    //     HookAccessor.Text += "\n" + Text;
-    //     HookAccessor.SaveChanges();
-    // }
 }
 
 public enum Events

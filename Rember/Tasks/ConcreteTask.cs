@@ -1,12 +1,11 @@
 ﻿namespace Rember.Tasks;
 
-public class ConcreteTask: ITask
+/// <summary>
+///     Implementation of the ITask interface.
+/// </summary>
+public class ConcreteTask : ITask
 {
-    public string Name { get; set; }
-    public string Command { get; set; }
-    public bool IsEnabled { get; set; } = true;
-    public bool OutputEnabled { get; set; } = false;
-
+    // This is used for yml stuff, do not remove.
     public ConcreteTask()
     {
         Name = "";
@@ -26,6 +25,11 @@ public class ConcreteTask: ITask
         IsEnabled = isEnabled;
         OutputEnabled = outputEnabled;
     }
+
+    public string Name { get; set; }
+    public string Command { get; set; }
+    public bool IsEnabled { get; set; } = true;
+    public bool OutputEnabled { get; set; }
 
     public string GetName()
     {

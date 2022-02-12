@@ -1,24 +1,27 @@
 ﻿using Rember.Tasks;
 
-namespace Rember.YmlStuff;
+namespace Rember.FileStuff.YmlStuff;
 
+/// <summary>
+///     Builds the skeleton of a <see cref="YmlStuff" /> instance.
+/// </summary>
 public class YmlBuilder
 {
-    private BuildTool BuildTool { get; set; }
-    private List<ConcreteTask> Tasks { get; set; }
-
     public YmlBuilder(BuildTool buildTool)
     {
         BuildTool = buildTool;
         Tasks = new List<ConcreteTask>();
     }
 
+    private BuildTool BuildTool { get; }
+    private List<ConcreteTask> Tasks { get; }
+
     public YmlBuilder AddBuildTask()
     {
         Tasks.Add(BuildTool.Build);
         return this;
     }
-    
+
     public YmlBuilder AddTestTask()
     {
         Tasks.Add(BuildTool.Test);
