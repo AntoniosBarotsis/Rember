@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>rember</id>
-    <version>0.0.4-beta1</version>
+    <version>0.0.4-rc1</version>
     <packageSourceUrl>https://github.com/AntoniosBarotsis/Rember</packageSourceUrl>
     <owners>Antonios Barotsis</owners>
     <title>rember</title>
@@ -20,14 +20,12 @@
       committing or pushing your code.
     </description>
     <releaseNotes>
-      - Fixed some bugs
-      - Add save and restore
-      - Ability to load settings from a yml file
+      - Major refactor
+      - Removed the pre-commit option for now at least, default and only option are push hooks
     </releaseNotes>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
     <file src="README.md" target="tools" />
-    <file src="LICENSE" target="tools" />
   </files>
 </package>
