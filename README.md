@@ -34,7 +34,7 @@ It detects your used language and build tool automatically, currently (hopefully
 
 - With [Nuget](https://www.nuget.org/packages/Rember/)
   ```sh
-  dotnet tool install --global Rember --version 0.0.4-rc1
+  dotnet tool install --global Rember --version 0.0.4-rc2
   ```
 
 Check the latest version just in case.
@@ -72,7 +72,7 @@ You should be able to add any commands you want.
     - Fix custom task creation
     - Add save and restore
     - Ability to load settings from a yml file
-- v0.0.4-rc1
+- v0.0.4-rc2
     - Major refactor
     - Removed the pre-commit option for now at least, default and only option are push hooks
 
