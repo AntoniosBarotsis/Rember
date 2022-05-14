@@ -6,34 +6,64 @@ using Rember.Models;
 
 namespace Rember.Util;
 
+/// <summary>
+///     Exposes methods that produce the desired hook files.
+/// </summary>
 public class HookUtils
 {
-    public HookUtils(Type type, BuildTool buildTool)
+    public HookUtils(BuildTool buildTool)
     {
-        Type = type;
         BuildTool = buildTool;
     }
 
-    private Type Type { get; }
     private BuildTool BuildTool { get; }
 
+    /// <summary>
+    ///     Generates the hook contents for the build tool's build task.
+    /// </summary>
+    /// <param name="commandEnabled"></param>
+    /// <param name="outputEnabled"></param>
+    /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
     public (string header, string body) GenerateBuildScript(bool commandEnabled, bool outputEnabled = true)
     {
         return Generate(BuildTool.Build.GetName(), BuildTool.Build.GetCommand(), commandEnabled, outputEnabled);
     }
 
+    /// <summary>
+    ///     Generates the hook contents for the build tool's test task.
+    /// </summary>
+    /// <param name="commandEnabled"></param>
+    /// <param name="outputEnabled"></param>
+    /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
     public (string header, string body) GenerateTestScript(bool commandEnabled, bool outputEnabled = true)
     {
         return Generate(BuildTool.Test.GetName(), BuildTool.Test.GetCommand(), commandEnabled, outputEnabled);
     }
 
-    public (string header, string body) GenerateAnyScript(string name, string command, bool commandEnabled,
+    /// <summary>
+    ///     Like <see cref="GenerateBuildScript" /> and <see cref="GenerateBuildScript" /> but for custom tasks.
+    /// </summary>
+    /// <param name="name">Task name</param>
+    /// <param name="command">Task command</param>
+    /// <param name="commandEnabled"></param>
+    /// <param name="outputEnabled"></param>
+    /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
+    public static (string header, string body) GenerateAnyScript(string name, string command, bool commandEnabled,
         bool outputEnabled = true)
     {
         return Generate(name, command, commandEnabled, outputEnabled);
     }
 
-    private (string header, string body) Generate(string name, string command, bool commandEnabled, bool outputEnabled)
+    /// <summary>
+    ///     Generates the hook file contents for any command and options.
+    /// </summary>
+    /// <param name="name">The task name</param>
+    /// <param name="command">The command</param>
+    /// <param name="commandEnabled"></param>
+    /// <param name="outputEnabled"></param>
+    /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
+    private static (string header, string body) Generate(string name, string command, bool commandEnabled,
+        bool outputEnabled)
     {
         var inputName = name.RemoveSpaces() + "Input";
 
@@ -70,6 +100,12 @@ fi
         return (header, body);
     }
 
+    /// <summary>
+    ///     Enables/Disables task output
+    /// </summary>
+    /// <param name="text">The hook text that corresponds to the task</param>
+    /// <param name="outputEnable">Whether to enable output or not</param>
+    /// <returns>The edited text</returns>
     private static string ToggleOutput(string text, bool outputEnable)
     {
         var toggle = false;
@@ -92,6 +128,14 @@ fi
             }).ToList());
     }
 
+    /// <summary>
+    ///     Enables/Disables a task
+    /// </summary>
+    /// <param name="text">The hook text that corresponds to the task</param>
+    /// <param name="taskName">The task name</param>
+    /// <param name="enable">Whether to enable it or not</param>
+    /// <returns>The edited text</returns>
+    /// <exception cref="CommandException">If the task was not found</exception>
     private static string TaskToggle(string text, string taskName, bool enable)
     {
         // Searches for the variable name to determine whether the task exists.
@@ -110,15 +154,27 @@ fi
         return TaskToggleHelper(text, startIndex, taskName, enable);
     }
 
+    /// <summary>
+    ///     Gets start index of the <code>Do you want to run TASK_NAME</code> line.
+    /// </summary>
+    /// <param name="text">The text</param>
+    /// <param name="taskName">The task name</param>
+    /// <returns>The index of the beginning of the line (or -1 if not found)</returns>
     private static int GetTaskStartIndex(string text, string taskName)
     {
         var tmp = new Regex($"echo \"Do you want to run {taskName}?", RegexOptions.IgnoreCase);
         return tmp.Match(text).Index;
     }
 
-    private static bool TaskExists(string text, string task)
+    /// <summary>
+    ///     Returns true if the task exists.
+    /// </summary>
+    /// <param name="text">The whole hook file</param>
+    /// <param name="taskName">The task name</param>
+    /// <returns></returns>
+    private static bool TaskExists(string text, string taskName)
     {
-        return text.Contains(task, StringComparison.CurrentCultureIgnoreCase);
+        return text.Contains(taskName, StringComparison.CurrentCultureIgnoreCase);
     }
 
     /// <summary>
@@ -156,7 +212,14 @@ fi
         return text.Replace(usefulPart, usefulPartUpdated);
     }
 
-    public static string EnableYes(string text, string taskName, bool alwaysRun)
+    /// <summary>
+    ///     Enables/disables automatic run of a task
+    /// </summary>
+    /// <param name="text">The task text</param>
+    /// <param name="taskName">The task name</param>
+    /// <param name="alwaysRun"></param>
+    /// <returns>The edited text</returns>
+    public static string ToggleAutomaticRun(string text, string taskName, bool alwaysRun)
     {
         if (!alwaysRun) return text;
 

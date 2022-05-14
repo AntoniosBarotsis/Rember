@@ -4,7 +4,7 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace Rember.Models;
 
 /// <summary>
-///     Represents the overall state of a hook file. Used for serializing and deserializing to and from yml.
+///     Represents the overall state of a hook file. Used for deserializing from yml.
 /// </summary>
 public record YmlStuff
 {
@@ -28,18 +28,6 @@ public record YmlStuff
 
     public string BuildToolName { get; set; }
     public List<ConcreteTask> Tasks { get; set; }
-
-    /// <summary>
-    ///     Turns the current instance to a yml string.
-    /// </summary>
-    /// <returns>The yml string</returns>
-    public string Serialize()
-    {
-        return new SerializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build()
-            .Serialize(this);
-    }
 
     /// <summary>
     ///     Turns the yml string to a class instance.

@@ -1,11 +1,13 @@
-﻿using Rember.Models;
+﻿namespace Rember.Util;
 
-namespace Rember.Util;
-
+/// <summary>
+///     File writing abstraction.
+/// </summary>
 public class HookFileFacade
 {
     private static HookFileFacade? _instance;
 
+    // Did this so it is possible to change the type to a commit for when and if that ever happens
     private readonly Lazy<string> _path = new(() =>
         Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}");
 
@@ -15,21 +17,12 @@ public class HookFileFacade
     }
 
     public string Text { get; private set; }
-    private static Type Type { get; } = Type.Push;
+    private static Type Type => Type.Push;
 
     // Singleton
     public static HookFileFacade Instance
     {
         get { return _instance ??= new HookFileFacade(); }
-    }
-
-    /// <summary>
-    ///     Reads current value of the hook file into the <see cref="Text" />.
-    /// </summary>
-    public void ReadFromFile()
-    {
-        using var sr = new StreamReader(File.OpenRead(_path.Value));
-        Text = sr.ReadToEnd();
     }
 
     /// <summary>
@@ -39,15 +32,6 @@ public class HookFileFacade
     public void WriteToFile(string text)
     {
         Text = text;
-    }
-
-    /// <summary>
-    ///     Stages a new <see cref="Text" /> by appending to it.
-    /// </summary>
-    /// <param name="text">The Text to append</param>
-    public void AppendToFile(string text)
-    {
-        Text += text;
     }
 
     /// <summary>

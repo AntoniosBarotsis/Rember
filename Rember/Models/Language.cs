@@ -21,6 +21,8 @@ public class Language
 
     /// <summary>
     ///     A list of files/directories that should be ignored to save time.
+    ///     Don't quite remember why I decided to remove the dot from the filenames
+    ///     and also do that while checking them in order to ignore them but yes.
     /// </summary>
     public static IEnumerable<string> Ignored { get; } = new[]
     {

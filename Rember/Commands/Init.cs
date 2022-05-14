@@ -6,7 +6,6 @@ using Optional;
 using Rember.Extensions;
 using Rember.Models;
 using Rember.Util;
-using Type = Rember.Util.Type;
 
 namespace Rember.Commands;
 
@@ -63,7 +62,7 @@ public class Init : ICommand
         var res = ConfigPath.Match(
             InitFromYml,
             () => buildTool.Match(
-                AddTask,
+                AddTasks,
                 () => throw new CommandException("Build tool not recognized")
             )
         )!;
@@ -76,9 +75,14 @@ public class Init : ICommand
         return default;
     }
 
-    private string AddTask(BuildTool buildTool)
+    /// <summary>
+    ///     Adds build/test depending on user args (not config file)
+    /// </summary>
+    /// <param name="buildTool">The detected build tool</param>
+    /// <returns>The hook contents</returns>
+    private string AddTasks(BuildTool buildTool)
     {
-        var hook = new HookUtils(Type.Push, buildTool);
+        var hook = new HookUtils(buildTool);
         var (header, b1) = hook.GenerateBuildScript(_build).SetAlwaysRunTo(AlwaysRun, "Build");
         var (_, b2) = hook.GenerateTestScript(_test).SetAlwaysRunTo(AlwaysRun, "Test");
 
@@ -88,10 +92,18 @@ public class Init : ICommand
     private static bool IsGitRepository()
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        return Directory.GetDirectories(currentDirectory, ".git", SearchOption.TopDirectoryOnly)
+
+        return Directory
+            .GetDirectories(currentDirectory, ".git", SearchOption.TopDirectoryOnly)
             .Length > 0;
     }
 
+    /// <summary>
+    ///     Reads an applies config from yml file
+    /// </summary>
+    /// <param name="p">Path to yml file</param>
+    /// <returns>The hook contents</returns>
+    /// <exception cref="CommandException">If the build tool is invalid or if something generally went wrong.</exception>
     private string InitFromYml(string p)
     {
         EnsureValidYml(p);
@@ -107,17 +119,19 @@ public class Init : ICommand
         return buildTool.Match(
             bt =>
             {
-                var hook = new HookUtils(Type.Push, bt);
+                var hook = new HookUtils(bt);
                 var body = "";
                 var header = "";
 
                 foreach (var task in config.Tasks)
                 {
                     var (h, b) =
-                        hook.GenerateAnyScript(task.Name, task.Command, task.IsEnabled, task.OutputEnabled)
+                        HookUtils
+                            .GenerateAnyScript(task.Name, task.Command, task.IsEnabled, task.OutputEnabled)
                             .SetAlwaysRunTo(task.AlwaysRun, task.Name);
+
                     header = h;
-                    body += HookUtils.EnableYes($"{b}\n", task.Name, AlwaysRun);
+                    body += HookUtils.ToggleAutomaticRun($"{b}\n", task.Name, AlwaysRun);
                 }
 
                 if (header.Length == 0 || body.Length == 0)
@@ -129,6 +143,11 @@ public class Init : ICommand
         );
     }
 
+    /// <summary>
+    ///     Ensures that the file exists and is a yml/yaml file.
+    /// </summary>
+    /// <param name="p">Path to file</param>
+    /// <exception cref="CommandException">If the file is invalid</exception>
     private static void EnsureValidYml(string p)
     {
         var exists = File.Exists(Directory.GetCurrentDirectory() + p);

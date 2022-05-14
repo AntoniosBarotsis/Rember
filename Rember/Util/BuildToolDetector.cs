@@ -6,7 +6,7 @@ namespace Rember.Util;
 public static class BuildToolDetector
 {
     /// <summary>
-    ///     Tries to detect the build tool using the BuildTool.AssociatedFiles.
+    ///     Tries to detect the build tool using the <see cref="BuildTool.AssociatedFiles" />.
     /// </summary>
     /// <param name="files">The list of files from the directory in question.</param>
     /// <param name="language">The project language.</param>
@@ -15,17 +15,19 @@ public static class BuildToolDetector
     {
         if (language.BuildTools.Length == 1) return Option.Some(language.BuildTools[0]);
 
-        var bt = (
+        return (
             from f in files
             from buildTool in language.BuildTools
             where buildTool.AssociatedFiles.Contains(f)
             select buildTool
-        ).FirstOrDefault();
-
-
-        return bt.SomeNotNull()!;
+        ).FirstOrDefault()!.SomeNotNull();
     }
 
+    /// <summary>
+    ///     Tries to detect the build tool using the <see cref="BuildTool.AssociatedFiles" />.
+    /// </summary>
+    /// <param name="files">The list of files from the directory in question.</param>
+    /// <returns>The detected build tool or null.</returns>
     public static Option<BuildTool> GetBuildTool(Lazy<List<string>> files)
     {
         var lang = LanguageDetector.DetectLanguage(files.Value);

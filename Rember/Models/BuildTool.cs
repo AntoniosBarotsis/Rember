@@ -2,6 +2,10 @@
 
 namespace Rember.Models;
 
+/// <summary>
+///     Represents any supported build tool. All build tools must have a name, a build and test task
+///     as well as a collection of associated files which are later used to detect them automatically.
+/// </summary>
 public class BuildTool
 {
     private BuildTool(string name, string[] associatedFiles, ConcreteTask build, ConcreteTask test)

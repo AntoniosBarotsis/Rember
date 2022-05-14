@@ -31,7 +31,7 @@ public class ConcreteTask : ITask
     public string Command { get; set; }
     public bool IsEnabled { get; set; } = true;
     public bool OutputEnabled { get; set; } = true;
-    public bool AlwaysRun { get; set; } = false;
+    public bool AlwaysRun { get; set; }
 
     public string GetName()
     {

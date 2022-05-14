@@ -25,13 +25,13 @@
         <PackageTags>git hook;pre commit</PackageTags>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="../README.md" Pack="true" PackagePath="\"/>
+        <None Include="../README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="CliFx" Version="2.2.5"/>
-        <PackageReference Include="Optional" Version="4.0.0"/>
-        <PackageReference Include="Spectre.Console" Version="0.44.0"/>
-        <PackageReference Include="YamlDotNet" Version="11.2.1"/>
+        <PackageReference Include="CliFx" Version="2.2.5" />
+        <PackageReference Include="Optional" Version="4.0.0" />
+        <PackageReference Include="Spectre.Console" Version="0.44.0" />
+        <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 
 </Project>
