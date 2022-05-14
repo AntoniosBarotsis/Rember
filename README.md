@@ -60,8 +60,8 @@ buildToolName: Dotnet
 tasks:
 - name: Build
   command: dotnet build
-  outputEnabled: false  # Default is true, this shows you the output you'd normally see from the command
-  alwaysRun: true       # Default is false, enabling it means that you will not be asked before running it
+  outputEnabled: false  # Default is true
+  alwaysRun: true       # Default is false
 ```
 
 In order to use it run:
