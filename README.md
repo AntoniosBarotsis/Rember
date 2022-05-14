@@ -16,14 +16,7 @@ pushing code and waiting for it to break the pipeline 15 minutes later.
 
 ## About
 
-It detects your used language and build tool automatically, currently (hopefully) supports:
-
-- Dotnet
-- Maven
-- Gradle
-- NPM
-- Yarn
-- SBT
+Rember is a command line tool that can run any task you want before pushing your code so you never push broken or unlinted code ever again.
 
 ## Installation
 
@@ -44,22 +37,38 @@ ps script.
 
 ## Usage
 
-The list of commands is getting rather lengthy so run `rember -h` instead :)
+Running `rember init` from the command line automatically detects your used language and build tool, currently (hopefully) supports:
 
-TLDR: `rember init`
+- Dotnet
+- Maven
+- Gradle
+- NPM
+- Yarn
+- SBT
+
+Use `rember -h` and `rember init -h` for more information.
 
 ### The `rember.yml` config file
 
-The recommended way to use this tool is by creating a yaml file.
+The recommended way to use this tool is by creating a yaml file. This means that you have to manually add all
+steps but it also means that you can add any steps you want. This makes it much easier when working in a team.
 
 There is a sample in the repository which should be self-explanatory. 
+
+```yml
+buildToolName: Dotnet
+tasks:
+- name: Build
+  command: dotnet build
+  outputEnabled: false  # Default is true, this shows you the output you'd normally see from the command
+  alwaysRun: true       # Default is false, enabling it means that you will not be asked before running it
+```
+
 In order to use it run:
 
 ```sh
 rember init -f rember.yml
 ```
-
-You should be able to add any commands you want.
 
 ## Roadmap
 
@@ -75,7 +84,9 @@ You should be able to add any commands you want.
 - v0.0.4-rc2
     - Major refactor
     - Removed the pre-commit option for now at least, default and only option are push hooks
-
-Will move to using a dev branch like a normal person when I leave beta versions :)
+- v0.0.4-rc3 [unreleased]
+    - Improved readme a bit
+    - Set `AlwaysRun` to `false` by default
+    - 🚧 Waiting for feedback to address 🚧 
 
 Feel free to open issues with feature requests, ideas or bug reports.
