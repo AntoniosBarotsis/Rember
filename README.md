@@ -95,7 +95,4 @@ rember init -f rember.yml
 
 ## Contributing
 
-Feel free to open issues with feature requests, ideas or bug reports.
-
-If you want to add a language that is currently unsupported The have a look at [Language.cs](Rember/Models/Language.cs)
-and [BuildTool.cs](Rember/Models/BuildTool.cs).
+Take a look at the [`CONTRIBUTING.md`](CONTRIBUTING.md) file.
