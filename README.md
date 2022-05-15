@@ -17,6 +17,9 @@ pushing code and waiting for it to break the pipeline 15 minutes later.
 ## About
 
 Rember is a command line tool that can run any task you want before pushing your code so you never push broken or unlinted code ever again.
+You can set it up directly from your command line for a more simplistic set up, Rember
+will automatically detect your language and build tool and generate a build and test
+task unless specified otherwise. For custom tasks a config file must be used.
 
 ## Installation
 
@@ -87,6 +90,7 @@ rember init -f rember.yml
 - v0.0.4-rc3 [unreleased]
     - Improved readme a bit
     - Set `AlwaysRun` to `false` by default
+    - Fixed a relative path bug
     - 🚧 Waiting for feedback to address 🚧 
 
 ## Contributing
