@@ -150,7 +150,7 @@ public class Init : ICommand
     /// <exception cref="CommandException">If the file is invalid</exception>
     private static void EnsureValidYml(string p)
     {
-        var exists = File.Exists(Directory.GetCurrentDirectory() + p);
+        var exists = File.Exists(p);
 
         if (!exists)
             throw new CommandException($"File {p} does not exist");
