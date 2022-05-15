@@ -8,26 +8,10 @@ namespace Rember.Models;
 /// </summary>
 public record YmlStuff
 {
-    public YmlStuff()
-    {
-        BuildToolName = "";
-        Tasks = new List<ConcreteTask>();
-    }
-
-    public YmlStuff(string buildToolName)
-    {
-        BuildToolName = buildToolName;
-        Tasks = new List<ConcreteTask>();
-    }
-
-    public YmlStuff(string buildToolName, List<ConcreteTask> tasks)
-    {
-        BuildToolName = buildToolName;
-        Tasks = tasks;
-    }
-
-    public string BuildToolName { get; set; }
-    public List<ConcreteTask> Tasks { get; set; }
+    public string BuildToolName { get; set; } = "";
+    public string HookDirectory { get; set; } = "/.git/hooks";
+    // ReSharper disable once CollectionNeverUpdated.Global
+    public List<ConcreteTask> Tasks { get; set; } = new();
 
     /// <summary>
     ///     Turns the yml string to a class instance.

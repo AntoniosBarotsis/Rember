@@ -60,12 +60,18 @@ There is a sample in the repository which should be self-explanatory.
 
 ```yml
 buildToolName: Dotnet
+# hookDirectory: .husky
 tasks:
 - name: Build
   command: dotnet build
   outputEnabled: false  # Default is true
   alwaysRun: true       # Default is false
 ```
+
+The hook directory should only be used if you, for whatever reason are not using the default git hooks
+location. You can check your current hook path by running `git config core.hooksPath`, if nothing is printed
+then ignore this, otherwise set it to whatever value is printed. Keep in mind that Rember will replace
+any `pre-push` hooks you already have!
 
 In order to use it run:
 
@@ -91,7 +97,7 @@ rember init -f rember.yml
     - Improved readme a bit
     - Set `AlwaysRun` to `false` by default
     - Fixed a relative path bug
-    - 🚧 Waiting for feedback to address 🚧 
+    - Added ability to change your git hooks path
 
 ## Contributing
 

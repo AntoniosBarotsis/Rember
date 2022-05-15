@@ -7,9 +7,17 @@ public class HookFileFacade
 {
     private static HookFileFacade? _instance;
 
-    // Did this so it is possible to change the type to a commit for when and if that ever happens
-    private readonly Lazy<string> _path = new(() =>
-        Directory.GetCurrentDirectory() + $"/.git/hooks/pre-{Type.ToString().ToLower()}");
+    public static string HookDirectory { get; set; } = "/.git/hooks";
+    private readonly Lazy<string> _path 
+        = new(() => {
+                if (!HookDirectory.StartsWith("/")) HookDirectory = "/" + HookDirectory;
+
+                return Directory.GetCurrentDirectory() +
+                       Path.Join(
+                           HookDirectory,
+                           $"pre-{Type.ToString().ToLower()}");
+            }
+        );
 
     private HookFileFacade()
     {
@@ -39,6 +47,11 @@ public class HookFileFacade
     /// </summary>
     public void SaveChanges()
     {
+        if (!Directory.Exists(HookDirectory))
+        {
+            Directory.CreateDirectory(Path.Join(Directory.GetCurrentDirectory(), HookDirectory));
+        }
+        
         using var sw = new StreamWriter(File.Create(_path.Value));
         sw.Write(Text);
         sw.Close();

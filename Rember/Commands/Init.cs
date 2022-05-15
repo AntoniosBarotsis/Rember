@@ -68,7 +68,7 @@ public class Init : ICommand
         )!;
 
         res.ThrowCmdExceptionIfEmpty();
-
+        
         HookFileFacade.Instance.WriteToFile(res);
         HookFileFacade.Instance.SaveChanges();
 
@@ -115,6 +115,8 @@ public class Init : ICommand
             .SupportedBuildTools()
             .FirstOrDefault(bt => bt.Name == config.BuildToolName)!
             .SomeNotNull();
+
+        HookFileFacade.HookDirectory = config.HookDirectory;
 
         return buildTool.Match(
             bt =>
