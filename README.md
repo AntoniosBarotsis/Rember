@@ -30,7 +30,7 @@ task unless specified otherwise. For custom tasks a config file must be used.
 
 - With [Nuget](https://www.nuget.org/packages/Rember/)
   ```sh
-  dotnet tool install --global Rember --version 0.0.4-rc2
+  dotnet tool install --global Rember --version 0.0.4-rc3
   ```
 
 Check the latest version just in case.
@@ -93,7 +93,7 @@ rember init -f rember.yml
 - v0.0.4-rc2
     - Major refactor
     - Removed the pre-commit option for now at least, default and only option are push hooks
-- v0.0.4-rc3 [unreleased]
+- v0.0.4-rc3
     - Improved readme a bit
     - Set `AlwaysRun` to `false` by default
     - Fixed a relative path bug
