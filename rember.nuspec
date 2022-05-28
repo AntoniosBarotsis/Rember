@@ -12,16 +12,15 @@
     <licenseUrl>https://github.com/AntoniosBarotsis/Rember/blob/master/LICENSE</licenseUrl>
     <bugTrackerUrl>https://github.com/AntoniosBarotsis/Rember/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc</bugTrackerUrl>
     <tags>rember git hook pre commit</tags>
-    <summary>CLI tool for configuring builds and tests as git hooks.</summary>
+    <summary>CLI tool for configuring git hooks.</summary>
     <description>
       # Rember
 
-      Rember is a command line tool that allows you to easily run builds and tests automatically before
-      committing or pushing your code.
+      Rember is a command line tool that reminds and allows you to easily run builds, tests and custom tasks automatically
+      before pushing code and waiting for it to break the pipeline 15 minutes later. You can just init it once and forget about it!
     </description>
     <releaseNotes>
-      - Major refactor
-      - Removed the pre-commit option for now at least, default and only option are push hooks
+      - Removed `buildToolName` from the `rember.yml` file.
     </releaseNotes>
   </metadata>
   <files>
