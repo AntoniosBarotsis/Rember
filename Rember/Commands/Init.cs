@@ -68,7 +68,7 @@ public class Init : ICommand
         )!;
 
         res.ThrowCmdExceptionIfEmpty();
-        
+
         HookFileFacade.Instance.WriteToFile(res);
         HookFileFacade.Instance.SaveChanges();
 
@@ -83,8 +83,8 @@ public class Init : ICommand
     private string AddTasks(BuildTool buildTool)
     {
         var hook = new HookUtils(buildTool);
-        var (header, b1) = hook.GenerateBuildScript(_build).SetAlwaysRunTo(AlwaysRun, "Build");
-        var (_, b2) = hook.GenerateTestScript(_test).SetAlwaysRunTo(AlwaysRun, "Test");
+        var (header, b1) = hook.GenerateBuildScript(_build, alwaysRun: AlwaysRun);
+        var (_, b2) = hook.GenerateTestScript(_test, alwaysRun: AlwaysRun);
 
         return $"{header}\n{b1}\n{b2}";
     }
@@ -111,38 +111,25 @@ public class Init : ICommand
         var ymlContents = string.Join("\n", File.ReadLines(p));
         var config = YmlStuff.Deserialize(ymlContents);
 
-        var buildTool = BuildTool
-            .SupportedBuildTools()
-            .FirstOrDefault(bt => bt.Name == config.BuildToolName)!
-            .SomeNotNull();
-
         HookFileFacade.HookDirectory = config.HookDirectory;
 
-        return buildTool.Match(
-            bt =>
-            {
-                var hook = new HookUtils(bt);
-                var body = "";
-                var header = "";
+        var body = "";
+        var header = "";
 
-                foreach (var task in config.Tasks)
-                {
-                    var (h, b) =
-                        HookUtils
-                            .GenerateAnyScript(task.Name, task.Command, task.IsEnabled, task.OutputEnabled)
-                            .SetAlwaysRunTo(task.AlwaysRun, task.Name);
+        foreach (var task in config.Tasks)
+        {
+            var (h, b) =
+                HookUtils
+                    .GenerateAnyScript(task.Name, task.Command, task.IsEnabled, task.OutputEnabled, task.AlwaysRun);
 
-                    header = h;
-                    body += HookUtils.ToggleAutomaticRun($"{b}\n", task.Name, AlwaysRun);
-                }
+            header = h;
+            body += HookUtils.ToggleAutomaticRun($"{b}\n", task.Name, AlwaysRun);
+        }
 
-                if (header.Length == 0 || body.Length == 0)
-                    throw new CommandException("Something went wrong while parsing the config file");
+        if (header.Length == 0 || body.Length == 0)
+            throw new CommandException("Something went wrong while parsing the config file");
 
-                return $"{header}\n{body}";
-            },
-            () => throw new CommandException($"Invalid build tool {config.BuildToolName}")
-        );
+        return $"{header}\n{body}";
     }
 
     /// <summary>

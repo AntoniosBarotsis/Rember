@@ -6,11 +6,14 @@ namespace Rember.Models;
 /// <summary>
 ///     Represents the overall state of a hook file. Used for deserializing from yml.
 /// </summary>
+// ReSharper disable once ClassNeverInstantiated.Global
 public record YmlStuff
 {
-    public string BuildToolName { get; set; } = "";
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
     public string HookDirectory { get; set; } = "/.git/hooks";
+
     // ReSharper disable once CollectionNeverUpdated.Global
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
     public List<ConcreteTask> Tasks { get; set; } = new();
 
     /// <summary>

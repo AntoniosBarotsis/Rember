@@ -23,10 +23,13 @@ public class HookUtils
     /// </summary>
     /// <param name="commandEnabled"></param>
     /// <param name="outputEnabled"></param>
+    /// <param name="alwaysRun"></param>
     /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
-    public (string header, string body) GenerateBuildScript(bool commandEnabled, bool outputEnabled = true)
+    public (string header, string body) GenerateBuildScript(bool commandEnabled, bool outputEnabled = true,
+        bool alwaysRun = false)
     {
-        return Generate(BuildTool.Build.GetName(), BuildTool.Build.GetCommand(), commandEnabled, outputEnabled);
+        return Generate(BuildTool.Build.GetName(), BuildTool.Build.GetCommand(), commandEnabled, outputEnabled,
+            alwaysRun);
     }
 
     /// <summary>
@@ -34,10 +37,13 @@ public class HookUtils
     /// </summary>
     /// <param name="commandEnabled"></param>
     /// <param name="outputEnabled"></param>
+    /// <param name="alwaysRun"></param>
     /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
-    public (string header, string body) GenerateTestScript(bool commandEnabled, bool outputEnabled = true)
+    public (string header, string body) GenerateTestScript(bool commandEnabled, bool outputEnabled = true,
+        bool alwaysRun = false)
     {
-        return Generate(BuildTool.Test.GetName(), BuildTool.Test.GetCommand(), commandEnabled, outputEnabled);
+        return Generate(BuildTool.Test.GetName(), BuildTool.Test.GetCommand(), commandEnabled, outputEnabled,
+            alwaysRun);
     }
 
     /// <summary>
@@ -47,11 +53,12 @@ public class HookUtils
     /// <param name="command">Task command</param>
     /// <param name="commandEnabled"></param>
     /// <param name="outputEnabled"></param>
+    /// <param name="alwaysRun"></param>
     /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
     public static (string header, string body) GenerateAnyScript(string name, string command, bool commandEnabled,
-        bool outputEnabled = true)
+        bool outputEnabled = true, bool alwaysRun = false)
     {
-        return Generate(name, command, commandEnabled, outputEnabled);
+        return Generate(name, command, commandEnabled, outputEnabled, alwaysRun);
     }
 
     /// <summary>
@@ -61,14 +68,15 @@ public class HookUtils
     /// <param name="command">The command</param>
     /// <param name="commandEnabled"></param>
     /// <param name="outputEnabled"></param>
+    /// <param name="alwaysRun"></param>
     /// <returns>Tuple of the header (shebang and potential metadata) and the body</returns>
     private static (string header, string body) Generate(string name, string command, bool commandEnabled,
-        bool outputEnabled)
+        bool outputEnabled, bool alwaysRun)
     {
         var inputName = name.RemoveSpaces() + "Input";
 
-        const string shebang = "#!/bin/sh\n\nexec < /dev/tty\n";
-        const string header = $"{shebang}";
+        // exec < /dev/tty makes it so terminal input is read
+        var header = alwaysRun ? "#!/bin/sh" : "#!/bin/sh\n\nexec < /dev/tty\n";
 
         var body = @$"
 echo """"
@@ -96,36 +104,11 @@ then
 fi
 ";
         body = TaskToggle(body, name, commandEnabled);
-        body = ToggleOutput(body, outputEnabled);
+        body = body
+            .ToggleOutput(outputEnabled)
+            .SetAlwaysRunTo(alwaysRun, name);
+        
         return (header, body);
-    }
-
-    /// <summary>
-    ///     Enables/Disables task output
-    /// </summary>
-    /// <param name="text">The hook text that corresponds to the task</param>
-    /// <param name="outputEnable">Whether to enable output or not</param>
-    /// <returns>The edited text</returns>
-    private static string ToggleOutput(string text, bool outputEnable)
-    {
-        var toggle = false;
-        return string.Join("\r\n", text.Split("\r\n")
-            .Select(line =>
-            {
-                // Next line has the command
-                if (line.Contains("echo \"Running"))
-                {
-                    toggle = true;
-                    return line;
-                }
-
-                if (!toggle) return line;
-                toggle = false;
-                if (outputEnable) return line.Replace(" &> /dev/null", "");
-
-                // This makes sure the out dump isn't added multiple times.
-                return line.Contains(" &> /dev/null") ? line : line + " &> /dev/null";
-            }).ToList());
     }
 
     /// <summary>

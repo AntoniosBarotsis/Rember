@@ -5,14 +5,7 @@
 Rember is a command line tool that reminds and allows you to easily run builds, tests and custom tasks automatically
 before
 pushing code and waiting for it to break the pipeline 15 minutes later.
-
-**Table of contents**
-
-- [Rember](#rember)
-    - [About](#about)
-    - [Installation](#installation)
-    - [Usage](#usage)
-    - [Roadmap](#roadmap)
+You can just init it once and forget about it!
 
 ## About
 
@@ -30,10 +23,12 @@ task unless specified otherwise. For custom tasks a config file must be used.
 
 - With [Nuget](https://www.nuget.org/packages/Rember/)
   ```sh
-  dotnet tool install --global Rember --version 0.0.4-rc3
+  dotnet tool install --global Rember --version 0.0.4-rc4
   ```
 
 Check the latest version just in case.
+
+### Installation for Developers
 
 To install this right now for developing, assuming you have the required dotnet stuff, simply run the `RefreshPackage`
 ps script.
@@ -59,7 +54,6 @@ steps but it also means that you can add any steps you want. This makes it much 
 There is a sample in the repository which should be self-explanatory. 
 
 ```yml
-buildToolName: Dotnet
 # hookDirectory: .husky
 tasks:
 - name: Build
@@ -68,36 +62,23 @@ tasks:
   alwaysRun: true       # Default is false
 ```
 
-The hook directory should only be used if you, for whatever reason are not using the default git hooks
-location. You can check your current hook path by running `git config core.hooksPath`, if nothing is printed
-then ignore this, otherwise set it to whatever value is printed. Keep in mind that Rember will replace
-any `pre-push` hooks you already have!
+- `hookDirectory`: Optional. The hook directory should only be used if you, for whatever reason, are not using the default
+  git hooks location. You can check your current hook path by running `git config core.hooksPath`, if nothing is printed
+  then ignore this, otherwise set it to whatever value is printed. Keep in mind that Rember will replace
+  any `pre-push` hooks you already have!
+
+- `outputEnabled`: Controlls if you can view the logs that would normally be printed to the console by the specified command.
+  Recommended to set to true for debugging purposes.
+
+- `alwaysRun`: This is **required** to be set to true if you are using git clients (like GitKraken). If enabled, the tasks
+  will run automatically instead of asking you first. If you are using git commands from the command line, it is recommended that
+  you set this to false as it gives you the option to skip tasks that you know will work.
 
 In order to use it run:
 
 ```sh
 rember init -f rember.yml
 ```
-
-## Roadmap
-
-- v0.0.2-beta
-    - Remove existing tasks
-    - Select if u want build/test at init, ability to add either one later on
-    - Ability to define custom tasks to run [a bit buggy, pushed back to  0.0.3]
-- v0.0.3-beta
-    - Completely remake how file accesses work [delayed to next release]
-    - Fix custom task creation
-    - Add save and restore
-    - Ability to load settings from a yml file
-- v0.0.4-rc2
-    - Major refactor
-    - Removed the pre-commit option for now at least, default and only option are push hooks
-- v0.0.4-rc3
-    - Improved readme a bit
-    - Set `AlwaysRun` to `false` by default
-    - Fixed a relative path bug
-    - Added ability to change your git hooks path
 
 ## Contributing
 

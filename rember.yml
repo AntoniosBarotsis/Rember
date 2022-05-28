@@ -1,4 +1,3 @@
-buildToolName: Dotnet
 tasks:
 - name: Build
   command: dotnet build

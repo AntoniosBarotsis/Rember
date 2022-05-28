@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>rember</id>
-    <version>0.0.4-rc3</version>
+    <version>0.0.4-rc4</version>
     <packageSourceUrl>https://github.com/AntoniosBarotsis/Rember</packageSourceUrl>
     <owners>Antonios Barotsis</owners>
     <title>rember</title>
