@@ -51,10 +51,9 @@ Use `rember -h` and `rember init -h` for more information.
 The recommended way to use this tool is by creating a yaml file. This means that you have to manually add all
 steps but it also means that you can add any steps you want. This makes it much easier when working in a team.
 
-There is a sample in the repository which should be self-explanatory. 
+There is a sample in the repository which should be self-explanatory:
 
 ```yml
-# hookDirectory: .husky
 tasks:
 - name: Build
   command: dotnet build
@@ -62,17 +61,7 @@ tasks:
   alwaysRun: true       # Default is false
 ```
 
-- `hookDirectory`: Optional. The hook directory should only be used if you, for whatever reason, are not using the default
-  git hooks location. You can check your current hook path by running `git config core.hooksPath`, if nothing is printed
-  then ignore this, otherwise set it to whatever value is printed. Keep in mind that Rember will replace
-  any `pre-push` hooks you already have!
-
-- `outputEnabled`: Controlls if you can view the logs that would normally be printed to the console by the specified command.
-  Recommended to set to true for debugging purposes.
-
-- `alwaysRun`: This is **required** to be set to true if you are using git clients (like GitKraken). If enabled, the tasks
-  will run automatically instead of asking you first. If you are using git commands from the command line, it is recommended that
-  you set this to false as it gives you the option to skip tasks that you know will work.
+You can also read [the wiki](https://github.com/AntoniosBarotsis/Rember/wiki) for a more detailed explanation.
 
 In order to use it run:
 
