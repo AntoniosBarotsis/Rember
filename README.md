@@ -1,6 +1,6 @@
 # Rember
 
-![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember) ![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) [![Publish](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml/badge.svg)](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml)
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/rember)](https://www.nuget.org/packages/Rember/) [![Chocolatey Version (including pre-releases)](https://img.shields.io/chocolatey/v/rember?include_prereleases)](https://community.chocolatey.org/packages/Rember) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) [![Publish](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml/badge.svg)](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml)
 
 Rember is a command line tool that reminds and allows you to easily run builds, tests and custom tasks automatically
 before
@@ -18,12 +18,12 @@ task unless specified otherwise. For custom tasks a config file must be used.
 
 - With [choco](https://community.chocolatey.org/packages/Rember)
   ```sh
-  choco install rember --pre
+  choco install rember
   ```
 
 - With [Nuget](https://www.nuget.org/packages/Rember/)
   ```sh
-  dotnet tool install --global Rember --version 0.0.4-rc4
+  dotnet tool install --global Rember
   ```
 
 Check the latest version just in case.

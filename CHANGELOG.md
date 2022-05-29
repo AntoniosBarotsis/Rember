@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [Unreleased] -->
 
+## [0.0.4] - 2022-05-29
+### Changed
+- Switched to a full release version
+
 ## [0.0.4-rc4] - 2022-05-28
 ### Changed
 - Removed `buildToolName` from the `rember.yml` file
