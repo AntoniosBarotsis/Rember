@@ -1,3 +1,3 @@
 dotnet publish -o publish
 
-dotnet publish -o publish --self-contained --runtime -x64
+dotnet publish -o tools --self-contained True /property:PublishTrimmed=True /property:PublishSingleFile=True
