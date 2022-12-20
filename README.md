@@ -1,6 +1,6 @@
 # Rember
 
-[![Nuget Version](https://img.shields.io/nuget/v/Rember?color=brightgreen)](https://www.nuget.org/packages/Rember/) [![Chocolatey Version](https://img.shields.io/chocolatey/v/rember?color=brightgreen)](https://community.chocolatey.org/packages/Rember) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/AntoniosBarotsis/Rember/Publish?label=publish)
+[![Nuget Version](https://img.shields.io/nuget/v/Rember?color=brightgreen)](https://www.nuget.org/packages/Rember/) [![Chocolatey Version](https://img.shields.io/chocolatey/v/rember?color=brightgreen)](https://community.chocolatey.org/packages/Rember) ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/AntoniosBarotsis/rember) [![Publish](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml/badge.svg)](https://github.com/AntoniosBarotsis/Rember/actions/workflows/publish.yml)
 
 Rember is a command line tool that reminds and allows you to easily run builds, tests and custom tasks automatically
 before
